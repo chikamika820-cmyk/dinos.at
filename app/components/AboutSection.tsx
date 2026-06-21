@@ -98,7 +98,7 @@ export default function AboutSection() {
 
             {/* Stats */}
             <div style={{ ...t(0.55), display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 1, borderTop: "1px solid var(--border)" }}>
-              {[["150+", "Cocktails"], ["300+", "Spirituosen"], ["5+", "Jahre"]].map(([v, l]) => (
+              {[["150+", "Cocktails"], ["300+", "Spirituosen"], ["5+", "Jahre"]].map(([v, l], i) => (
                 <div key={i} style={{ padding: "28px 0", borderRight: "1px solid var(--border)" }}> 
                   <div style={{ fontFamily: "var(--font-cormorant)", fontSize: "2.4rem", fontWeight: 300, color: "var(--gold)", lineHeight: 1 }}>{v}</div>
                   <div style={{ fontSize: "0.62rem", letterSpacing: "0.3em", textTransform: "uppercase", color: "var(--text-3)", marginTop: 6, fontFamily: "var(--font-sans)" }}>{l}</div>
