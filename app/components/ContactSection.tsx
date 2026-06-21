@@ -1,12 +1,16 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import { MapPin, Phone, Mail, Clock } from "lucide-react";
+import Reveal from "./motion/Reveal";
+import ChapterEyebrow from "./motion/ChapterEyebrow";
+import { staggerContainer, fadeUp, viewportOnce } from "@/app/lib/motion";
 
 const HOURS = [
-  { day: "Montag",     time: "Ruhetag",      jsDay: 1, closed: true },
-  { day: "Di–Do",      time: "17:00–02:00",  jsDay: 2 },
-  { day: "Fr–Sa",      time: "17:00–03:00",  jsDay: 5 },
-  { day: "Sonntag",    time: "20:00–00:00",  jsDay: 0 },
+  { day: "Montag",     time: "Ruhetag",      closed: true },
+  { day: "Di–Do",      time: "17:00–02:00" },
+  { day: "Fr–Sa",      time: "17:00–03:00" },
+  { day: "Sonntag",    time: "20:00–00:00" },
 ];
 
 function InstagramIcon() {
@@ -27,42 +31,41 @@ function FacebookIcon() {
 }
 
 export default function ContactSection() {
-  const ref = useRef<HTMLElement>(null);
-  const [v, setV] = useState(false);
-  const today = typeof window !== "undefined" ? new Date().getDay() : -1;
+  const [today, setToday] = useState(-1);
   useEffect(() => {
-    const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) setV(true); }, { threshold: 0.08 });
-    if (ref.current) io.observe(ref.current);
-    return () => io.disconnect();
+    // Date() is client-only — read it after mount to avoid an SSR/client hydration mismatch.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setToday(new Date().getDay());
   }, []);
 
-  const isOpen = (h: typeof HOURS[0]) => {
-    if (h.jsDay === undefined) return false;
-    if (Array.isArray(h.jsDay)) return (h.jsDay as number[]).includes(today);
-    return h.jsDay === today || (h.day === "Di–Do" && today >= 2 && today <= 4) || (h.day === "Fr–Sa" && (today === 5 || today === 6));
+  const isOpen = (day: string) => {
+    if (day === "Di–Do") return today >= 2 && today <= 4;
+    if (day === "Fr–Sa") return today === 5 || today === 6;
+    if (day === "Sonntag") return today === 0;
+    return false;
   };
 
   return (
-    <section id="contact" ref={ref} className="section-pad" style={{ background: "var(--black)" }}>
+    <section id="contact" className="section-pad" style={{ background: "var(--black)" }}>
       <div style={{ maxWidth: 1320, margin: "0 auto", padding: "0 32px" }}>
 
         {/* Header */}
-        <div style={{ marginBottom: 80,
-          opacity: v ? 1 : 0, transform: v ? "translateY(0)" : "translateY(24px)",
-          transition: "opacity 0.8s cubic-bezier(0.22,1,0.36,1), transform 0.8s cubic-bezier(0.22,1,0.36,1)" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 24 }}>
-            <span className="gold-rule" />
-            <span className="t-eyebrow">Kontakt & Standort</span>
-          </div>
-          <h2 style={{ fontFamily: "var(--font-cormorant)", fontWeight: 300, fontSize: "clamp(2.4rem, 4.5vw, 4rem)", color: "var(--text-1)", lineHeight: 1.05 }}>
-            Wir freuen uns auf dich
-          </h2>
+        <div style={{ marginBottom: 80 }}>
+          <ChapterEyebrow roman="VI" style={{ marginBottom: 24 }}>Kontakt & Standort</ChapterEyebrow>
+          <Reveal delay={0.1}>
+            <h2 style={{ fontFamily: "var(--font-cormorant)", fontWeight: 300, fontSize: "clamp(2.6rem, 5vw, 4.4rem)", color: "var(--text-1)", lineHeight: 1.05 }}>
+              Wir freuen uns auf dich
+            </h2>
+          </Reveal>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 48 }} className="contact-grid">
+        <motion.div
+          initial="hidden" whileInView="show" viewport={viewportOnce} variants={staggerContainer(0.12)}
+          style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 48 }} className="contact-grid"
+        >
 
           {/* Contact */}
-          <div style={{ opacity: v ? 1 : 0, transition: "opacity 0.8s 0.1s" }}>
+          <motion.div variants={fadeUp}>
             <p className="t-eyebrow" style={{ marginBottom: 32 }}>Kontakt</p>
             <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
               {[
@@ -78,7 +81,7 @@ export default function ContactSection() {
                     <c.icon size={15} color="var(--gold)" />
                   </div>
                   <div>
-                    <p style={{ fontSize: "0.58rem", letterSpacing: "0.3em", textTransform: "uppercase", color: "var(--text-3)", fontFamily: "var(--font-sans)", marginBottom: 4 }}>{c.label}</p>
+                    <p className="t-label" style={{ marginBottom: 4 }}>{c.label}</p>
                     <p style={{ fontSize: "0.9rem", color: "var(--text-1)", fontFamily: "var(--font-sans)", fontWeight: 300, whiteSpace: "pre-line" }}>{c.value}</p>
                   </div>
                 </a>
@@ -96,22 +99,23 @@ export default function ContactSection() {
                 ))}
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Hours */}
-          <div style={{ opacity: v ? 1 : 0, transition: "opacity 0.8s 0.2s" }}>
+          <motion.div variants={fadeUp}>
             <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 32 }}>
               <Clock size={13} color="var(--gold)" />
               <p className="t-eyebrow">Öffnungszeiten</p>
             </div>
             <div style={{ display: "flex", flexDirection: "column" }}>
               {HOURS.map((h) => {
-                const active = !h.closed && isOpen(h);
+                const active = !h.closed && isOpen(h.day);
                 return (
                   <div key={h.day} style={{
                     display: "flex", justifyContent: "space-between", alignItems: "center",
                     padding: "16px 0", borderBottom: "1px solid var(--border)",
                     background: active ? "rgba(196,151,58,0.04)" : "transparent",
+                    transition: "background 0.4s",
                   }}>
                     <span style={{ fontSize: "0.85rem", color: active ? "var(--gold)" : "var(--text-2)", fontFamily: "var(--font-sans)", fontWeight: 300 }}>
                       {h.day}
@@ -127,13 +131,12 @@ export default function ContactSection() {
             <p style={{ marginTop: 16, fontSize: "0.62rem", color: "var(--text-3)", fontFamily: "var(--font-sans)", letterSpacing: "0.05em" }}>
               Küche schließt 1 Stunde vor Barbetrieb.
             </p>
-          </div>
+          </motion.div>
 
           {/* Map */}
-          <div style={{ opacity: v ? 1 : 0, transition: "opacity 0.8s 0.3s" }}>
+          <motion.div variants={fadeUp}>
             <p className="t-eyebrow" style={{ marginBottom: 32 }}>Standort</p>
             <div style={{ position: "relative", height: 320, border: "1px solid var(--border)", overflow: "hidden" }}>
-              {/* Embedded map placeholder – in production use Google Maps embed */}
               <div style={{ width: "100%", height: "100%", background: "var(--surface-2)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 20 }}>
                 <div style={{ position: "absolute", inset: 0, backgroundImage: `linear-gradient(rgba(196,151,58,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(196,151,58,0.06) 1px, transparent 1px)`, backgroundSize: "32px 32px" }} />
                 <div style={{ zIndex: 1, textAlign: "center" }}>
@@ -149,8 +152,8 @@ export default function ContactSection() {
                 </div>
               </div>
             </div>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </div>
       <style>{`
         @media (max-width: 1024px) { .contact-grid { grid-template-columns: 1fr 1fr !important; } }

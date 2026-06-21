@@ -1,5 +1,9 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import Reveal from "./motion/Reveal";
+import ChapterEyebrow from "./motion/ChapterEyebrow";
+import { DUR, EASE_SMOOTH } from "@/app/lib/motion";
 
 const CATS = [
   {
@@ -32,79 +36,81 @@ const CATS = [
 ];
 
 export default function MenuSection() {
-  const ref  = useRef<HTMLElement>(null);
-  const [v, setV]   = useState(false);
   const [cat, setCat] = useState(0);
-  useEffect(() => {
-    const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) setV(true); }, { threshold: 0.08 });
-    if (ref.current) io.observe(ref.current);
-    return () => io.disconnect();
-  }, []);
 
   return (
-    <section id="menu" ref={ref} className="section-pad" style={{ background: "var(--black)" }}>
+    <section id="menu" className="section-pad" style={{ background: "var(--black)" }}>
       <div style={{ maxWidth: 900, margin: "0 auto", padding: "0 32px" }}>
 
         {/* Header */}
-        <div style={{ textAlign: "center", marginBottom: 64,
-          opacity: v ? 1 : 0, transform: v ? "translateY(0)" : "translateY(24px)",
-          transition: "opacity 0.8s cubic-bezier(0.22,1,0.36,1), transform 0.8s cubic-bezier(0.22,1,0.36,1)" }}>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 14, marginBottom: 24 }}>
-            <span className="gold-rule" />
-            <span className="t-eyebrow">Kulinarik</span>
-            <span className="gold-rule" />
-          </div>
-          <h2 style={{ fontFamily: "var(--font-cormorant)", fontWeight: 300, fontSize: "clamp(2.4rem, 4.5vw, 4rem)", color: "var(--text-1)", lineHeight: 1.05 }}>
-            Speisekarte
-          </h2>
-          <p style={{ marginTop: 16, fontFamily: "var(--font-cormorant)", fontStyle: "italic", fontSize: "1.2rem", color: "var(--text-2)" }}>
-            Sorgfältig komponierte Küche, die den Abend begleitet.
-          </p>
+        <div style={{ textAlign: "center", marginBottom: 64 }}>
+          <ChapterEyebrow roman="II" align="center" style={{ justifyContent: "center", marginBottom: 24 }}>Tafel</ChapterEyebrow>
+          <Reveal delay={0.1}>
+            <h2 style={{ fontFamily: "var(--font-cormorant)", fontWeight: 300, fontSize: "clamp(2.6rem, 5vw, 4.4rem)", color: "var(--text-1)", lineHeight: 1.05 }}>
+              Speisekarte
+            </h2>
+          </Reveal>
+          <Reveal delay={0.18}>
+            <p style={{ marginTop: 16, fontFamily: "var(--font-cormorant)", fontStyle: "italic", fontSize: "1.2rem", color: "var(--text-2)" }}>
+              Sorgfältig komponierte Küche, die den Abend begleitet.
+            </p>
+          </Reveal>
         </div>
 
         {/* Tabs */}
-        <div style={{ display: "flex", justifyContent: "center", gap: 0, borderBottom: "1px solid var(--border)", marginBottom: 56,
-          opacity: v ? 1 : 0, transition: "opacity 0.8s 0.15s" }}>
+        <Reveal delay={0.2} style={{ display: "flex", justifyContent: "center", gap: 0, borderBottom: "1px solid var(--border)", marginBottom: 56 }}>
           {CATS.map((c, i) => (
             <button key={c.label} onClick={() => setCat(i)} style={{
-              padding: "14px 36px", background: "none", border: "none", cursor: "pointer",
+              position: "relative", padding: "14px 36px", background: "none", border: "none", cursor: "pointer",
               fontSize: "0.62rem", letterSpacing: "0.3em", textTransform: "uppercase",
               fontFamily: "var(--font-sans)", fontWeight: 400,
               color: cat === i ? "var(--gold)" : "var(--text-3)",
-              borderBottom: cat === i ? "1px solid var(--gold)" : "1px solid transparent",
               marginBottom: -1, transition: "color 0.25s",
-            }}>{c.label}</button>
+            }}>
+              {c.label}
+              {cat === i && (
+                <motion.div layoutId="menu-tab-pill" transition={{ duration: DUR.fast, ease: EASE_SMOOTH }}
+                  style={{ position: "absolute", left: 0, right: 0, bottom: -1, height: 1, background: "var(--gold)" }} />
+              )}
+            </button>
           ))}
-        </div>
+        </Reveal>
 
         {/* Items */}
-        <div>
-          {CATS[cat].items.map((item, i) => (
-            <div key={item.name}
-              style={{
-                display: "flex", justifyContent: "space-between", alignItems: "flex-start",
-                padding: "28px 0", borderBottom: "1px solid var(--border)",
-                opacity: v ? 1 : 0, transition: `opacity 0.6s ${0.08 * i}s`,
-              }}
-            >
-              <div style={{ flex: 1, paddingRight: 40 }}>
-                <h3 style={{ fontFamily: "var(--font-cormorant)", fontSize: "1.2rem", fontWeight: 400, color: "var(--text-1)", marginBottom: 8 }}>
-                  {item.name}
-                </h3>
-                <p style={{ fontSize: "0.82rem", color: "var(--text-3)", fontFamily: "var(--font-sans)", fontWeight: 300, letterSpacing: "0.02em", lineHeight: 1.8 }}>
-                  {item.desc}
-                </p>
-              </div>
-              <span style={{ fontFamily: "var(--font-cormorant)", fontSize: "1.1rem", fontWeight: 400, color: "var(--gold)", flexShrink: 0 }}>
-                {item.price}
-              </span>
-            </div>
-          ))}
-        </div>
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={cat}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: DUR.fast, ease: EASE_SMOOTH }}
+          >
+            {CATS[cat].items.map((item, i) => (
+              <motion.div key={item.name}
+                initial={{ opacity: 0 }} animate={{ opacity: 1, transition: { delay: i * 0.05, duration: DUR.medium } }}
+                style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", padding: "28px 0", borderBottom: "1px solid var(--border)" }}
+              >
+                <div style={{ flex: 1, paddingRight: 40 }}>
+                  <h3 style={{ fontFamily: "var(--font-cormorant)", fontSize: "1.2rem", fontWeight: 400, color: "var(--text-1)", marginBottom: 8 }}>
+                    {item.name}
+                  </h3>
+                  <p style={{ fontSize: "0.82rem", color: "var(--text-3)", fontFamily: "var(--font-sans)", fontWeight: 300, letterSpacing: "0.02em", lineHeight: 1.8 }}>
+                    {item.desc}
+                  </p>
+                </div>
+                <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.95rem", fontWeight: 400, color: "var(--gold)", flexShrink: 0 }}>
+                  {item.price}
+                </span>
+              </motion.div>
+            ))}
+          </motion.div>
+        </AnimatePresence>
 
-        <p style={{ marginTop: 36, textAlign: "center", fontSize: "0.62rem", letterSpacing: "0.15em", color: "var(--text-3)", fontFamily: "var(--font-sans)", opacity: v ? 0.7 : 0, transition: "opacity 0.8s 0.5s" }}>
-          Alle Preise inkl. MwSt. · Küche schließt 1 Stunde vor Barbetrieb.
-        </p>
+        <Reveal delay={0.1}>
+          <p style={{ marginTop: 36, textAlign: "center", fontSize: "0.62rem", letterSpacing: "0.15em", color: "var(--text-3)", fontFamily: "var(--font-sans)", opacity: 0.7 }}>
+            Alle Preise inkl. MwSt. · Küche schließt 1 Stunde vor Barbetrieb.
+          </p>
+        </Reveal>
       </div>
     </section>
   );

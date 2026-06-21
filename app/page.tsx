@@ -4,15 +4,19 @@ import AboutSection from "./components/AboutSection";
 import MenuSection from "./components/MenuSection";
 import DrinksSection from "./components/DrinksSection";
 import GallerySection from "./components/GallerySection";
-import TeamSection from "./components/TeamSection";
 import ReservationSection from "./components/ReservationSection";
 import ContactSection from "./components/ContactSection";
 import Footer from "./components/Footer";
 import StickyMobileCTA from "./components/StickyMobileCTA";
+import DesktopReservationCTA from "./components/DesktopReservationCTA";
+import TinctureRail from "./components/TinctureRail";
+import CustomCursor from "./components/CustomCursor";
 
 export default function Home() {
   return (
     <>
+      <CustomCursor />
+      <TinctureRail />
       <Navbar />
       <main>
         <HeroSection />
@@ -20,12 +24,12 @@ export default function Home() {
         <MenuSection />
         <DrinksSection />
         <GallerySection />
-        <TeamSection />
         <ReservationSection />
         <ContactSection />
       </main>
       <Footer />
       <StickyMobileCTA />
+      <DesktopReservationCTA />
     </>
   );
 }

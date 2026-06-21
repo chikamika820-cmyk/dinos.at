@@ -32,11 +32,6 @@ await page.evaluate(() => document.querySelector("#gallery")?.scrollIntoView({ b
 await page.waitForTimeout(900);
 await page.screenshot({ path: "screenshots/05-gallery.png" });
 
-// Team
-await page.evaluate(() => document.querySelector("#team")?.scrollIntoView({ behavior: "instant" }));
-await page.waitForTimeout(900);
-await page.screenshot({ path: "screenshots/06-team.png" });
-
 // Reservation
 await page.evaluate(() => document.querySelector("#reservation")?.scrollIntoView({ behavior: "instant" }));
 await page.waitForTimeout(900);

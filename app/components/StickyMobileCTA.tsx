@@ -1,5 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import { EASE_SMOOTH, DUR } from "@/app/lib/motion";
 
 export default function StickyMobileCTA() {
   const [show, setShow] = useState(false);
@@ -14,17 +16,18 @@ export default function StickyMobileCTA() {
   }, []);
 
   return (
-    <div
-      className="lg:hidden"
+    <motion.div
+      className="flex lg:hidden"
+      initial={false}
+      animate={{ y: show ? 0 : "100%" }}
+      transition={{ duration: DUR.slow, ease: EASE_SMOOTH }}
       style={{
         position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 90,
-        transform: show ? "translateY(0)" : "translateY(100%)",
-        transition: "transform 0.4s cubic-bezier(0.22,1,0.36,1)",
         padding: "12px 16px",
-        background: "rgba(8,8,8,0.95)",
+        background: "rgba(10,8,7,0.95)",
         backdropFilter: "blur(20px)",
         borderTop: "1px solid var(--border)",
-        display: "flex", gap: 10,
+        gap: 10,
       }}
     >
       <button
@@ -37,6 +40,6 @@ export default function StickyMobileCTA() {
       <a href="tel:+43155357230" className="btn-outline" style={{ padding: "14px 20px" }}>
         Anrufen
       </a>
-    </div>
+    </motion.div>
   );
 }

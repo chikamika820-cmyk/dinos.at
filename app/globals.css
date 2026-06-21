@@ -2,18 +2,34 @@
 
 :root {
   --gold:       #C4973A;
-  --gold-light: #E2B96A;
-  --gold-dim:   rgba(196,151,58,0.15);
-  --black:      #080808;
-  --surface-1:  #0E0E0E;
-  --surface-2:  #141414;
-  --surface-3:  #1C1C1C;
-  --text-1:     #F2EDE4;
-  --text-2:     #A89880;
-  --text-3:     #665C50;
-  --border:     rgba(196,151,58,0.12);
-  --border-mid: rgba(196,151,58,0.28);
+  --gold-light: #E7BC6E;
+  --gold-dim:   rgba(196,151,58,0.16);
+  --black:      #0A0807;
+  --surface-1:  #15100C;
+  --surface-2:  #1D1611;
+  --surface-3:  #271E16;
+  --text-1:     #F6EEE0;
+  --text-2:     #B49B7C;
+  --text-3:     #998A76;
+  --border:     rgba(196,151,58,0.14);
+  --border-mid: rgba(196,151,58,0.32);
   --radius:     2px;
+
+  /* ── Copper accent (secondary, used sparingly) ── */
+  --copper:      #B8703E;
+  --copper-light:#D69566;
+  --copper-dim:  rgba(184,112,62,0.16);
+
+  /* ── Motion tokens (see transitions-dev vocabulary) ── */
+  --ease-smooth: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-out:    ease-out;
+  --dur-stagger: 0.04s;
+  --dur-micro:   0.08s;
+  --dur-quick:   0.15s;
+  --dur-fast:    0.25s;
+  --dur-medium:  0.35s;
+  --dur-slow:    0.4s;
+  --dur-vslow:   0.5s;
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -64,9 +80,35 @@ body {
 .t-body {
   font-family: var(--font-sans), sans-serif;
   font-weight: 300;
-  line-height: 1.85;
+  line-height: 1.8;
   color: var(--text-2);
-  font-size: 0.9375rem;
+  font-size: 1rem;
+}
+
+/* ── Apothecary label / formula notation ── */
+.t-label {
+  font-family: var(--font-mono), monospace;
+  font-weight: 400;
+  font-size: 0.6875rem;
+  letter-spacing: 0.12em;
+  color: var(--text-3);
+}
+
+/* ── Focus visibility (dark UI needs an explicit ring) ── */
+:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+  border-radius: var(--radius);
+}
+
+/* ── Reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 /* ── Decorative ── */
@@ -116,7 +158,7 @@ body {
 .anim-scale-in { animation: scaleIn 0.8s cubic-bezier(0.22,1,0.36,1) both; }
 
 .gold-text {
-  background: linear-gradient(135deg, #9A7020 0%, var(--gold) 40%, var(--gold-light) 60%, var(--gold) 100%);
+  background: linear-gradient(135deg, var(--copper) 0%, var(--gold) 40%, var(--gold-light) 60%, var(--gold) 100%);
   background-size: 200% auto;
   -webkit-background-clip: text;
   background-clip: text;
@@ -130,23 +172,24 @@ body {
 .field-wrap select,
 .field-wrap textarea {
   width: 100%;
-  background: rgba(255,255,255,0.025);
+  background: rgba(255,255,255,0.03);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   color: var(--text-1);
-  padding: 22px 16px 8px;
+  padding: 26px 18px 10px;
   font-family: var(--font-sans), sans-serif;
-  font-size: 0.9rem;
+  font-size: 0.92rem;
   font-weight: 300;
   outline: none;
-  transition: border-color 0.25s, background 0.25s;
+  transition: border-color 0.25s, background 0.25s, box-shadow 0.25s;
   -webkit-appearance: none;
 }
 .field-wrap input:focus,
 .field-wrap select:focus,
 .field-wrap textarea:focus {
   border-color: var(--gold);
-  background: rgba(196,151,58,0.04);
+  background: rgba(196,151,58,0.05);
+  box-shadow: 0 0 0 3px var(--gold-dim);
 }
 .field-wrap label {
   position: absolute;
@@ -225,6 +268,12 @@ body {
   border-color: var(--gold);
   color: var(--gold);
   transform: translateY(-1px);
+}
+
+/* ── Custom cursor (desktop pointer:fine only, toggled via JS) ── */
+.custom-cursor-active,
+.custom-cursor-active * {
+  cursor: none !important;
 }
 
 /* ── Noise overlay ── */
