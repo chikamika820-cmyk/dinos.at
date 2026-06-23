@@ -3,208 +3,189 @@ import { useRef } from "react";
 import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
 import Magnetic from "./motion/Magnetic";
-import { EASE_SMOOTH, staggerContainer, wordReveal, fadeUp, withDelay } from "@/app/lib/motion";
+import { EASE_SMOOTH } from "@/app/lib/motion";
 
-const AWARDS = [
-  "Falstaff · Beste American Bar 2025",
-  "Falstaff · Beste American Bar 2024",
-  "Falstaff · Bartender des Jahres 2024",
-  "Falstaff · Beste American Bar 2023",
-];
+const EASE = [0.25, 0.46, 0.45, 0.94] as const;
 
-const LINE_1 = ["Die", "Kunst", "des"];
-const LINE_2 = ["perfekten", "Cocktails"];
+function fadeUp(delay = 0) {
+  return {
+    hidden: { opacity: 0, y: 22 },
+    show:   { opacity: 1, y: 0, transition: { duration: 1.1, delay, ease: EASE } },
+  };
+}
+function fadeIn(delay = 0, duration = 1.2) {
+  return {
+    hidden: { opacity: 0 },
+    show:   { opacity: 1, transition: { duration, delay, ease: EASE } },
+  };
+}
 
 export default function HeroSection() {
   const heroRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
-  const parallaxY = useTransform(scrollYProgress, [0, 1], [0, 160]);
-  const fade = useTransform(scrollYProgress, [0, 0.9], [1, 0]);
+  const imgY   = useTransform(scrollYProgress, [0, 1], [0, 140]);
+  const textY  = useTransform(scrollYProgress, [0, 1], [0, 60]);
+  const opacity = useTransform(scrollYProgress, [0, 0.75], [1, 0]);
 
   return (
-    <section ref={heroRef} className="noise" style={{ position: "relative", height: "100svh", minHeight: 640, display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
-
-      {/* Background image — scroll-linked parallax + slow ambient Ken Burns drift */}
-      <motion.div
-        style={{ position: "absolute", inset: 0, y: parallaxY, transformOrigin: "center top" }}
-        initial={{ scale: 1.06 }}
-        animate={{ scale: 1.16 }}
-        transition={{ duration: 26, ease: "linear" }}
-      >
-        <Image
-          src="https://images.unsplash.com/photo-1470337458703-46ad1756a187?w=1800&q=85"
-          alt="Dino's Apothecary Bar Interior"
-          fill
-          priority
-          style={{ objectFit: "cover", objectPosition: "center 40%" }}
-          sizes="100vw"
-        />
+    <section
+      ref={heroRef}
+      className="noise"
+      style={{ position: "relative", height: "100svh", minHeight: 680, overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}
+    >
+      {/* Background — cinematic dark bar interior */}
+      <motion.div style={{ position: "absolute", inset: 0, y: imgY }}>
+        <motion.div
+          initial={{ scale: 1.05 }}
+          animate={{ scale: 1.12 }}
+          transition={{ duration: 24, ease: "linear" }}
+          style={{ position: "absolute", inset: 0 }}
+        >
+          <Image
+            src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=2200&q=90"
+            alt="Dino's Apothecary Bar"
+            fill
+            priority
+            sizes="100vw"
+            style={{ objectFit: "cover", objectPosition: "center 40%" }}
+          />
+        </motion.div>
       </motion.div>
 
-      {/* Layered overlays — deeper contrast, warm color grade */}
-      <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to bottom, rgba(10,8,7,0.78) 0%, rgba(10,8,7,0.5) 40%, rgba(10,8,7,0.88) 100%)" }} />
-      <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse at 60% 50%, transparent 25%, rgba(10,8,7,0.58) 100%)" }} />
-      <div style={{ position: "absolute", inset: 0, background: "rgba(184,112,62,0.06)", mixBlendMode: "multiply" }} />
+      {/* Grading layers — cinematic dark grade */}
+      <div style={{ position: "absolute", inset: 0, background: "rgba(6,8,13,0.60)" }} />
+      <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to bottom, rgba(6,8,13,0.88) 0%, rgba(6,8,13,0.40) 40%, rgba(6,8,13,0.92) 100%)" }} />
+      <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse at 50% 46%, transparent 20%, rgba(6,8,13,0.55) 100%)" }} />
+      {/* Warm amber undertone */}
+      <div style={{ position: "absolute", inset: 0, background: "rgba(80,50,20,0.10)", mixBlendMode: "multiply" }} />
 
-      {/* Cabinet-door curtain reveal on load */}
+      {/* Curtain reveal on load */}
       <motion.div
         initial={{ scaleX: 1 }}
         animate={{ scaleX: 0 }}
-        transition={{ duration: 1.05, ease: EASE_SMOOTH, delay: 0.15 }}
+        transition={{ duration: 1.2, ease: EASE_SMOOTH, delay: 0.05 }}
         style={{ position: "absolute", inset: 0, left: 0, width: "50%", background: "var(--black)", transformOrigin: "left", zIndex: 50, pointerEvents: "none" }}
       />
       <motion.div
         initial={{ scaleX: 1 }}
         animate={{ scaleX: 0 }}
-        transition={{ duration: 1.05, ease: EASE_SMOOTH, delay: 0.15 }}
+        transition={{ duration: 1.2, ease: EASE_SMOOTH, delay: 0.05 }}
         style={{ position: "absolute", inset: 0, left: "50%", width: "50%", background: "var(--black)", transformOrigin: "right", zIndex: 50, pointerEvents: "none" }}
       />
 
-      <motion.div style={{ opacity: fade, position: "relative", width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
-
-        {/* Vertical side text */}
+      {/* Content */}
+      <motion.div
+        style={{ opacity, y: textY, position: "relative", zIndex: 10, textAlign: "center", width: "100%", padding: "0 32px" }}
+      >
+        {/* Location eyebrow */}
         <motion.div
-          initial="hidden" animate="show" variants={withDelay(fadeIn(), 1.0)}
-          style={{
-            position: "absolute", left: 32, top: "50%", transform: "translateY(-50%) rotate(-90deg)",
-            transformOrigin: "center center",
-            fontSize: "0.55rem", letterSpacing: "0.5em", textTransform: "uppercase",
-            color: "var(--text-3)", fontFamily: "var(--font-sans)", whiteSpace: "nowrap",
-          }}
+          initial="hidden" animate="show" variants={fadeIn(0.7)}
+          style={{ marginBottom: 36, display: "flex", alignItems: "center", justifyContent: "center", gap: 16 }}
         >
-          Salzgries 19 · 1010 Wien · Österreich
+          <span style={{ display: "block", width: 28, height: 1, background: "var(--gold)", opacity: 0.5 }} />
+          <span style={{
+            fontSize: "0.54rem", letterSpacing: "0.42em", textTransform: "uppercase",
+            color: "var(--gold)", fontFamily: "var(--font-sans)", opacity: 0.9,
+          }}>
+            Wien · 1. Bezirk · Seit 2019
+          </span>
+          <span style={{ display: "block", width: 28, height: 1, background: "var(--gold)", opacity: 0.5 }} />
         </motion.div>
 
-        {/* Scroll indicator */}
+        {/* Brand name — the visual hero */}
         <motion.div
-          initial="hidden" animate="show" variants={withDelay(fadeIn(), 1.2)}
-          style={{
-            position: "absolute", right: 32, top: "50%", transform: "translateY(-50%) rotate(90deg)",
-            fontSize: "0.55rem", letterSpacing: "0.5em", textTransform: "uppercase",
-            color: "var(--text-3)", fontFamily: "var(--font-sans)", whiteSpace: "nowrap",
-            display: "flex", alignItems: "center", gap: 12,
-          }}
+          initial="hidden" animate="show" variants={fadeUp(0.85)}
+          style={{ marginBottom: 16 }}
         >
-          Scroll
-          <span style={{ display: "block", width: 32, height: 1, background: "var(--text-3)" }} />
+          <h1 style={{
+            fontFamily: "var(--font-cormorant)",
+            fontWeight: 300,
+            fontSize: "clamp(4.5rem, 10vw, 8.5rem)",
+            letterSpacing: "0.12em",
+            color: "var(--text-1)",
+            lineHeight: 1,
+            textTransform: "uppercase",
+          }}>
+            Dino&apos;s
+          </h1>
         </motion.div>
 
-        {/* Main content */}
-        <div style={{ position: "relative", zIndex: 10, textAlign: "center", maxWidth: 900, padding: "0 32px" }}>
-
-          {/* Eyebrow */}
-          <motion.div
-            initial="hidden" animate="show" variants={withDelay(fadeUp, 0.55)}
-            style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 16, marginBottom: 40 }}
-          >
-            <span className="gold-rule" />
-            <span className="t-eyebrow" style={{ letterSpacing: "0.45em" }}>℞ Wien · 1. Bezirk · Seit 2019</span>
-            <span className="gold-rule" />
-          </motion.div>
-
-          {/* Headline — word-by-word stagger reveal */}
-          <motion.h1
-            initial="hidden" animate="show" variants={staggerContainer(0.07, 0.75)}
-            style={{
-              fontFamily: "var(--font-cormorant)", fontWeight: 300,
-              fontSize: "clamp(4rem, 11vw, 9.5rem)",
-              lineHeight: 0.98, letterSpacing: "-0.02em",
-              color: "var(--text-1)", marginBottom: 32,
-            }}
-          >
-            {LINE_1.map((w, i) => (
-              <motion.span key={i} variants={wordReveal} style={{ display: "inline-block", marginRight: "0.28em" }}>{w}</motion.span>
-            ))}
-            <br />
-            <em style={{ fontStyle: "italic" }}>
-              {LINE_2.map((w, i) => (
-                <motion.span key={i} variants={wordReveal} className="gold-text" style={{ display: "inline-block", marginRight: "0.28em" }}>{w}</motion.span>
-              ))}
-            </em>
-          </motion.h1>
-
-          {/* Subline */}
-          <motion.p
-            initial="hidden" animate="show" variants={withDelay(fadeUp, 1.15)}
-            style={{
-              fontFamily: "var(--font-cormorant)", fontWeight: 300, fontStyle: "italic",
-              fontSize: "clamp(1.1rem, 2.5vw, 1.5rem)", color: "var(--text-2)",
-              marginBottom: 56, maxWidth: 520, margin: "0 auto 56px",
-            }}
-          >
-            Handgefertigte Cocktails. Ausgewählte Spirituosen.<br />
-            Atmosphäre, die unvergessliche Abende schafft.
-          </motion.p>
-
-          {/* CTAs */}
-          <motion.div
-            initial="hidden" animate="show" variants={withDelay(fadeUp, 1.35)}
-            style={{ display: "flex", gap: 16, justifyContent: "center", flexWrap: "wrap" }}
-          >
-            <Magnetic>
-              <motion.button
-                className="btn-gold" style={{ fontSize: "0.75rem", padding: "18px 44px" }}
-                animate={{ boxShadow: ["0 8px 30px rgba(196,151,58,0.25)", "0 8px 48px rgba(196,151,58,0.5)", "0 8px 30px rgba(196,151,58,0.25)"] }}
-                transition={{ duration: 3.2, repeat: Infinity, ease: "easeInOut" }}
-                onClick={() => document.querySelector("#reservation")?.scrollIntoView({ behavior: "smooth" })}
-              >
-                Tisch reservieren
-              </motion.button>
-            </Magnetic>
-            <Magnetic strength={0.25} max={10}>
-              <button className="btn-outline" onClick={() => document.querySelector("#drinks")?.scrollIntoView({ behavior: "smooth" })}>
-                Karte entdecken
-              </button>
-            </Magnetic>
-          </motion.div>
-        </div>
-
-        {/* Awards marquee strip */}
+        {/* Subtitle */}
         <motion.div
-          initial="hidden" animate="show" variants={withDelay(fadeIn(), 1.6)}
-          style={{
-            position: "absolute", bottom: 0, left: 0, right: 0,
-            borderTop: "1px solid var(--border)",
-            background: "rgba(10,8,7,0.6)",
-            backdropFilter: "blur(12px)",
-            overflow: "hidden", padding: "14px 0",
-          }}
+          initial="hidden" animate="show" variants={fadeIn(1.05)}
+          style={{ marginBottom: 52 }}
         >
-          <div style={{ display: "flex", gap: 80, animation: "marquee 22s linear infinite", width: "max-content" }}>
-            {[...AWARDS, ...AWARDS, ...AWARDS, ...AWARDS].map((a, i) => (
-              <span key={i} style={{ fontSize: "0.62rem", letterSpacing: "0.35em", textTransform: "uppercase", color: "var(--text-3)", whiteSpace: "nowrap", fontFamily: "var(--font-sans)" }}>
-                <span style={{ color: "var(--gold)", marginRight: 12 }}>℞</span>
-                {a}
-              </span>
-            ))}
-          </div>
+          <p style={{
+            fontFamily: "var(--font-sans)",
+            fontSize: "0.58rem",
+            letterSpacing: "0.5em",
+            textTransform: "uppercase",
+            color: "var(--text-2)",
+            fontWeight: 400,
+          }}>
+            Apothecary Bar
+          </p>
         </motion.div>
 
-        {/* Opening hours pill */}
+        {/* Tagline */}
         <motion.div
-          initial="hidden" animate="show" variants={withDelay(fadeIn(0.7), 1.75)}
-          style={{ position: "absolute", bottom: 72, right: 40, flexDirection: "column", gap: 4 }}
-          className="hidden lg:flex"
+          initial="hidden" animate="show" variants={fadeUp(1.2)}
+          style={{ marginBottom: 60 }}
         >
-          {[
-            { d: "Di–Do", t: "17–02" },
-            { d: "Fr–Sa", t: "17–03" },
-            { d: "So",    t: "20–00" },
-          ].map(h => (
-            <div key={h.d} style={{ display: "flex", gap: 10, alignItems: "center" }}>
-              <span style={{ fontSize: "0.58rem", letterSpacing: "0.2em", color: "var(--gold)", fontFamily: "var(--font-sans)", textTransform: "uppercase" }}>{h.d}</span>
-              <span style={{ fontSize: "0.58rem", color: "var(--text-3)", fontFamily: "var(--font-sans)" }}>{h.t}</span>
-            </div>
-          ))}
+          <p style={{
+            fontFamily: "var(--font-cormorant)",
+            fontWeight: 300,
+            fontStyle: "italic",
+            fontSize: "clamp(1.1rem, 2.4vw, 1.75rem)",
+            color: "var(--text-2)",
+            lineHeight: 1.5,
+            maxWidth: 480,
+            margin: "0 auto",
+            letterSpacing: "0.01em",
+          }}>
+            Die Kunst des perfekten Cocktails
+          </p>
+        </motion.div>
+
+        {/* CTAs */}
+        <motion.div
+          initial="hidden" animate="show" variants={fadeUp(1.4)}
+          style={{ display: "flex", gap: 14, justifyContent: "center", flexWrap: "wrap" }}
+        >
+          <Magnetic>
+            <button
+              className="btn-gold"
+              onClick={() => document.querySelector("#reservation")?.scrollIntoView({ behavior: "smooth" })}
+              style={{ fontSize: "0.6rem", padding: "15px 40px" }}
+            >
+              Tisch reservieren
+            </button>
+          </Magnetic>
+          <button
+            className="btn-outline"
+            onClick={() => document.querySelector("#drinks")?.scrollIntoView({ behavior: "smooth" })}
+            style={{ fontSize: "0.6rem", padding: "14px 40px" }}
+          >
+            Karte entdecken
+          </button>
+        </motion.div>
+
+        {/* Falstaff note — minimal, bottom of hero */}
+        <motion.div
+          initial="hidden" animate="show" variants={fadeIn(1.7, 1.0)}
+          style={{ marginTop: 72 }}
+        >
+          <p style={{
+            fontSize: "0.52rem", letterSpacing: "0.35em", textTransform: "uppercase",
+            color: "var(--text-3)", fontFamily: "var(--font-sans)",
+          }}>
+            Falstaff · Beste American Bar · 2023 · 2024 · 2025
+          </p>
         </motion.div>
       </motion.div>
+
+      {/* Bottom fade */}
+      <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 2, background: "var(--border)" }} />
     </section>
   );
-}
-
-function fadeIn(targetOpacity = 1) {
-  return {
-    hidden: { opacity: 0 },
-    show: { opacity: targetOpacity, transition: { duration: 1.0, ease: EASE_SMOOTH } },
-  };
 }

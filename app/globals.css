@@ -1,35 +1,47 @@
 @import "tailwindcss";
 
 :root {
-  --gold:       #C4973A;
-  --gold-light: #E7BC6E;
-  --gold-dim:   rgba(196,151,58,0.16);
-  --black:      #0A0807;
-  --surface-1:  #15100C;
-  --surface-2:  #1D1611;
-  --surface-3:  #271E16;
-  --text-1:     #F6EEE0;
-  --text-2:     #B49B7C;
-  --text-3:     #998A76;
-  --border:     rgba(196,151,58,0.14);
-  --border-mid: rgba(196,151,58,0.32);
-  --radius:     2px;
+  /* ── Gold — aged brass, not casino yellow ── */
+  --gold:        #9A7C3F;
+  --gold-light:  #B8964F;
+  --gold-dim:    rgba(154,124,63,0.10);
+  --gold-glow:   rgba(154,124,63,0.20);
 
-  /* ── Copper accent (secondary, used sparingly) ── */
-  --copper:      #B8703E;
-  --copper-light:#D69566;
-  --copper-dim:  rgba(184,112,62,0.16);
+  /* ── Copper accent — used very sparingly ── */
+  --copper:      #8B6035;
+  --copper-light:#A87845;
 
-  /* ── Motion tokens (see transitions-dev vocabulary) ── */
-  --ease-smooth: cubic-bezier(0.22, 1, 0.36, 1);
-  --ease-out:    ease-out;
-  --dur-stagger: 0.04s;
-  --dur-micro:   0.08s;
-  --dur-quick:   0.15s;
-  --dur-fast:    0.25s;
-  --dur-medium:  0.35s;
-  --dur-slow:    0.4s;
-  --dur-vslow:   0.5s;
+  /* ── True midnight palette ── */
+  --black:       #06080D;
+  --surface-1:   #080B12;
+  --surface-2:   #0C101A;
+  --surface-3:   #101520;
+  --surface-4:   #161D2C;
+
+  /* ── Typography — warm cream, not pure white ── */
+  --text-1:      #E8DEC8;
+  --text-2:      #8A7862;
+  --text-3:      #4E576A;
+  --text-4:      #323A4A;
+
+  /* ── Borders — very subtle ── */
+  --border:      rgba(154,124,63,0.10);
+  --border-mid:  rgba(154,124,63,0.22);
+  --border-light:rgba(232,222,200,0.08);
+
+  /* ── Radius ── */
+  --radius: 1px;
+
+  /* ── Motion ── */
+  --ease-smooth: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --ease-out:    cubic-bezier(0.0, 0.0, 0.2, 1.0);
+  --ease-in-out: cubic-bezier(0.4, 0.0, 0.2, 1.0);
+
+  --dur-quick:  0.18s;
+  --dur-fast:   0.28s;
+  --dur-medium: 0.45s;
+  --dur-slow:   0.65s;
+  --dur-vslow:  0.90s;
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -46,18 +58,19 @@ body {
   overflow-x: hidden;
 }
 
-::selection { background: rgba(196,151,58,0.25); }
+::selection { background: rgba(154,124,63,0.18); }
 
-::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar { width: 2px; }
 ::-webkit-scrollbar-track { background: var(--black); }
-::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 2px; }
+::-webkit-scrollbar-thumb { background: var(--gold); opacity: 0.5; }
 
-/* ── Typography ── */
+/* ══ Typography system ═══════════════════════════════════ */
+
 .t-eyebrow {
   font-family: var(--font-sans), sans-serif;
-  font-size: 0.6875rem;
+  font-size: 0.6rem;
   font-weight: 400;
-  letter-spacing: 0.35em;
+  letter-spacing: 0.32em;
   text-transform: uppercase;
   color: var(--gold);
 }
@@ -65,7 +78,7 @@ body {
 .t-display {
   font-family: var(--font-cormorant), Georgia, serif;
   font-weight: 300;
-  line-height: 1.04;
+  line-height: 1.06;
   letter-spacing: -0.01em;
   color: var(--text-1);
 }
@@ -73,35 +86,42 @@ body {
 .t-title {
   font-family: var(--font-cormorant), Georgia, serif;
   font-weight: 400;
-  line-height: 1.15;
+  line-height: 1.16;
   color: var(--text-1);
 }
 
 .t-body {
   font-family: var(--font-sans), sans-serif;
   font-weight: 300;
-  line-height: 1.8;
+  line-height: 1.85;
   color: var(--text-2);
-  font-size: 1rem;
+  font-size: 0.92rem;
+  letter-spacing: 0.01em;
 }
 
-/* ── Apothecary label / formula notation ── */
 .t-label {
   font-family: var(--font-mono), monospace;
   font-weight: 400;
-  font-size: 0.6875rem;
-  letter-spacing: 0.12em;
+  font-size: 0.6rem;
+  letter-spacing: 0.16em;
   color: var(--text-3);
 }
 
-/* ── Focus visibility (dark UI needs an explicit ring) ── */
-:focus-visible {
-  outline: 2px solid var(--gold);
-  outline-offset: 3px;
-  border-radius: var(--radius);
+.t-small {
+  font-family: var(--font-sans), sans-serif;
+  font-size: 0.75rem;
+  font-weight: 300;
+  color: var(--text-2);
+  line-height: 1.7;
 }
 
-/* ── Reduced motion ── */
+/* ══ Focus ═══════════════════════════════════════════════ */
+:focus-visible {
+  outline: 1px solid var(--gold);
+  outline-offset: 3px;
+}
+
+/* ══ Reduced motion ══════════════════════════════════════ */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
@@ -111,21 +131,21 @@ body {
   }
 }
 
-/* ── Decorative ── */
+/* ══ Decorative ══════════════════════════════════════════ */
 .gold-rule {
   display: block;
-  width: 40px;
+  width: 32px;
   height: 1px;
   background: var(--gold);
-  opacity: 0.7;
+  opacity: 0.5;
 }
 
 .section-pad { padding: 9rem 0; }
 @media (max-width: 768px) { .section-pad { padding: 6rem 0; } }
 
-/* ── Animations ── */
+/* ══ Keyframes ══════════════════════════════════════════ */
 @keyframes fadeUp {
-  from { opacity: 0; transform: translateY(36px); }
+  from { opacity: 0; transform: translateY(28px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 @keyframes fadeIn {
@@ -133,88 +153,93 @@ body {
   to   { opacity: 1; }
 }
 @keyframes scaleIn {
-  from { opacity: 0; transform: scale(0.96); }
+  from { opacity: 0; transform: scale(0.97); }
   to   { opacity: 1; transform: scale(1); }
 }
-@keyframes lineGrow {
-  from { transform: scaleX(0); }
-  to   { transform: scaleX(1); }
+
+/* ══ Gold text — subtle shimmer, not loud ═══════════════ */
+.gold-text {
+  background: linear-gradient(
+    135deg,
+    var(--copper)      0%,
+    var(--gold)        35%,
+    var(--gold-light)  55%,
+    var(--gold)        75%,
+    var(--copper-light)100%
+  );
+  background-size: 240% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 9s linear infinite;
 }
-@keyframes marquee {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
-}
+
 @keyframes shimmer {
   0%   { background-position: -200% center; }
   100% { background-position:  200% center; }
 }
-@keyframes floatY {
-  0%, 100% { transform: translateY(0px); }
-  50%       { transform: translateY(-8px); }
+
+/* ══ Noise overlay ═══════════════════════════════════════ */
+.noise::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  opacity: 0.02;
+  pointer-events: none;
+  border-radius: inherit;
 }
 
-.anim-fade-up  { animation: fadeUp  0.9s cubic-bezier(0.22,1,0.36,1) both; }
-.anim-fade-in  { animation: fadeIn  1.1s ease both; }
-.anim-scale-in { animation: scaleIn 0.8s cubic-bezier(0.22,1,0.36,1) both; }
-
-.gold-text {
-  background: linear-gradient(135deg, var(--copper) 0%, var(--gold) 40%, var(--gold-light) 60%, var(--gold) 100%);
-  background-size: 200% auto;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: shimmer 6s linear infinite;
-}
-
-/* ── Floating label inputs ── */
+/* ══ Floating label inputs ══════════════════════════════ */
 .field-wrap { position: relative; }
 .field-wrap input,
 .field-wrap select,
 .field-wrap textarea {
   width: 100%;
-  background: rgba(255,255,255,0.03);
-  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.02);
+  border: 1px solid var(--border-light);
   border-radius: var(--radius);
   color: var(--text-1);
   padding: 26px 18px 10px;
   font-family: var(--font-sans), sans-serif;
-  font-size: 0.92rem;
+  font-size: 0.88rem;
   font-weight: 300;
   outline: none;
-  transition: border-color 0.25s, background 0.25s, box-shadow 0.25s;
+  transition: border-color 0.28s, background 0.28s;
   -webkit-appearance: none;
+  letter-spacing: 0.01em;
 }
 .field-wrap input:focus,
 .field-wrap select:focus,
 .field-wrap textarea:focus {
   border-color: var(--gold);
-  background: rgba(196,151,58,0.05);
+  background: rgba(154,124,63,0.04);
   box-shadow: 0 0 0 3px var(--gold-dim);
 }
 .field-wrap label {
   position: absolute;
   top: 50%;
-  left: 16px;
+  left: 17px;
   transform: translateY(-50%);
-  font-size: 0.7rem;
-  letter-spacing: 0.25em;
+  font-size: 0.6rem;
+  letter-spacing: 0.24em;
   text-transform: uppercase;
   color: var(--text-3);
   pointer-events: none;
   transition: top 0.2s, font-size 0.2s, color 0.2s;
+  font-family: var(--font-sans);
 }
 .field-wrap.has-value label,
 .field-wrap input:focus ~ label,
 .field-wrap select:focus ~ label,
 .field-wrap textarea:focus ~ label {
   top: 10px;
-  font-size: 0.58rem;
+  font-size: 0.52rem;
   color: var(--gold);
   transform: none;
 }
-.field-wrap select option { background: #111; }
+.field-wrap select option { background: var(--surface-1); }
 
-/* textarea-specific label */
 .field-wrap.textarea-wrap label {
   top: 20px;
   transform: none;
@@ -224,65 +249,56 @@ body {
   top: 8px;
 }
 
-/* ── Btn ── */
+/* ══ Buttons ═════════════════════════════════════════════ */
 .btn-gold {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  padding: 16px 40px;
+  padding: 15px 36px;
   background: var(--gold);
   color: var(--black);
   font-family: var(--font-sans), sans-serif;
-  font-size: 0.7rem;
+  font-size: 0.62rem;
   font-weight: 500;
-  letter-spacing: 0.3em;
+  letter-spacing: 0.28em;
   text-transform: uppercase;
   border: none;
   cursor: pointer;
-  transition: background 0.25s, box-shadow 0.25s, transform 0.2s;
+  transition: background 0.28s, box-shadow 0.28s, transform 0.2s;
   border-radius: var(--radius);
+  text-decoration: none;
 }
 .btn-gold:hover {
   background: var(--gold-light);
-  box-shadow: 0 8px 40px rgba(196,151,58,0.35);
+  box-shadow: 0 6px 32px rgba(154,124,63,0.32);
   transform: translateY(-1px);
 }
+.btn-gold:active { transform: translateY(0); }
+
 .btn-outline {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  padding: 15px 40px;
+  padding: 14px 36px;
   background: transparent;
   color: var(--text-1);
   font-family: var(--font-sans), sans-serif;
-  font-size: 0.7rem;
+  font-size: 0.62rem;
   font-weight: 400;
-  letter-spacing: 0.3em;
+  letter-spacing: 0.28em;
   text-transform: uppercase;
   border: 1px solid var(--border-mid);
   cursor: pointer;
-  transition: border-color 0.25s, color 0.25s, transform 0.2s;
+  transition: border-color 0.28s, color 0.28s, background 0.28s;
   border-radius: var(--radius);
+  text-decoration: none;
 }
 .btn-outline:hover {
   border-color: var(--gold);
   color: var(--gold);
-  transform: translateY(-1px);
+  background: var(--gold-dim);
 }
 
-/* ── Custom cursor (desktop pointer:fine only, toggled via JS) ── */
+/* ══ Custom cursor ═══════════════════════════════════════ */
 .custom-cursor-active,
-.custom-cursor-active * {
-  cursor: none !important;
-}
-
-/* ── Noise overlay ── */
-.noise::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
-  opacity: 0.025;
-  pointer-events: none;
-  border-radius: inherit;
-}
+.custom-cursor-active * { cursor: none !important; }
