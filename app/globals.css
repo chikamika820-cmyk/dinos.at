@@ -1,127 +1,127 @@
 @import "tailwindcss";
 
+/* ════════════════════════════════════════════════════════════
+   Dino's Apothecary Bar — Premium dark-luxury theme
+   Aged-brass gold · true-midnight ink · warm cream
+════════════════════════════════════════════════════════════ */
+
+@theme inline {
+  --radius-sm: 1px;
+  --radius-md: 2px;
+  --radius-lg: 2px;
+
+  --color-gold: var(--gold);
+  --color-gold-bright: var(--gold-bright);
+  --color-gold-dim: var(--gold-dim);
+  --color-cream: var(--cream);
+  --color-cream-dim: var(--cream-dim);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-border: var(--border);
+
+  /* Wired to the next/font CSS variables defined in layout.tsx */
+  --font-display: var(--font-cormorant);
+  --font-sans: var(--font-dm-sans);
+  --font-mono: var(--font-plex-mono);
+}
+
 :root {
-  /* ── Gold — aged brass, not casino yellow ── */
-  --gold:        #9A7C3F;
-  --gold-light:  #B8964F;
-  --gold-dim:    rgba(154,124,63,0.10);
-  --gold-glow:   rgba(154,124,63,0.20);
-
-  /* ── Copper accent — used very sparingly ── */
-  --copper:      #8B6035;
-  --copper-light:#A87845;
-
-  /* ── True midnight palette ── */
-  --black:       #06080D;
-  --surface-1:   #080B12;
-  --surface-2:   #0C101A;
-  --surface-3:   #101520;
-  --surface-4:   #161D2C;
-
-  /* ── Typography — warm cream, not pure white ── */
-  --text-1:      #E8DEC8;
-  --text-2:      #8A7862;
-  --text-3:      #4E576A;
-  --text-4:      #323A4A;
-
-  /* ── Borders — very subtle ── */
-  --border:      rgba(154,124,63,0.10);
-  --border-mid:  rgba(154,124,63,0.22);
-  --border-light:rgba(232,222,200,0.08);
-
-  /* ── Radius ── */
   --radius: 1px;
 
-  /* ── Motion ── */
-  --ease-smooth: cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  --ease-out:    cubic-bezier(0.0, 0.0, 0.2, 1.0);
-  --ease-in-out: cubic-bezier(0.4, 0.0, 0.2, 1.0);
+  --ink:    oklch(0.13 0.012 250);  /* #06080D */
+  --ink-2:  oklch(0.15 0.012 250);  /* #080B12 */
+  --ink-3:  oklch(0.18 0.014 250);  /* #0C101A */
 
-  --dur-quick:  0.18s;
-  --dur-fast:   0.28s;
-  --dur-medium: 0.45s;
-  --dur-slow:   0.65s;
-  --dur-vslow:  0.90s;
+  --cream:     oklch(0.89 0.035 80); /* #E8DEC8 */
+  --cream-dim: oklch(0.62 0.035 70); /* #8A7862 */
+
+  --gold:        oklch(0.62 0.10 75);  /* #9A7C3F */
+  --gold-bright: oklch(0.72 0.115 80); /* #B8964F */
+  --gold-dim:    oklch(0.48 0.085 75);
+
+  --border: oklch(0.62 0.10 75 / 0.18);
 }
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+@layer base {
+  * { border-color: var(--border); }
+  html { scroll-behavior: smooth; }
+  body {
+    background-color: var(--ink);
+    color: var(--cream);
+    font-family: var(--font-sans);
+    font-feature-settings: "ss01", "ss02";
+    font-weight: 300;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+  ::selection { background: var(--gold); color: var(--ink); }
+  h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 300; letter-spacing: -0.01em; }
 
-html { scroll-behavior: smooth; }
+  /* Slim luxury scrollbar */
+  ::-webkit-scrollbar { width: 3px; }
+  ::-webkit-scrollbar-track { background: var(--ink); }
+  ::-webkit-scrollbar-thumb { background: var(--gold-dim); }
 
-body {
-  background: var(--black);
-  color: var(--text-1);
-  font-family: var(--font-sans), system-ui, sans-serif;
-  font-weight: 300;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
+  :focus-visible { outline: 1px solid var(--gold); outline-offset: 3px; }
 }
 
-::selection { background: rgba(154,124,63,0.18); }
-
-::-webkit-scrollbar { width: 2px; }
-::-webkit-scrollbar-track { background: var(--black); }
-::-webkit-scrollbar-thumb { background: var(--gold); opacity: 0.5; }
-
-/* ══ Typography system ═══════════════════════════════════ */
-
-.t-eyebrow {
-  font-family: var(--font-sans), sans-serif;
-  font-size: 0.6rem;
-  font-weight: 400;
-  letter-spacing: 0.32em;
+/* Eyebrow / chapter label */
+@utility eyebrow {
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
   text-transform: uppercase;
-  color: var(--gold);
+  letter-spacing: 0.4em;
+  color: var(--cream-dim);
+  font-weight: 500;
 }
 
-.t-display {
-  font-family: var(--font-cormorant), Georgia, serif;
-  font-weight: 300;
-  line-height: 1.06;
-  letter-spacing: -0.01em;
-  color: var(--text-1);
+@utility hairline {
+  background: linear-gradient(90deg, transparent, var(--gold) 50%, transparent);
+  height: 1px;
+  opacity: 0.4;
 }
 
-.t-title {
-  font-family: var(--font-cormorant), Georgia, serif;
-  font-weight: 400;
-  line-height: 1.16;
-  color: var(--text-1);
+@utility gold-underline {
+  position: relative;
+  &::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -3px;
+    width: 100%;
+    height: 1px;
+    background: var(--gold);
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.5s cubic-bezier(0.7, 0, 0.2, 1);
+  }
+  &:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
 }
 
-.t-body {
-  font-family: var(--font-sans), sans-serif;
-  font-weight: 300;
-  line-height: 1.85;
-  color: var(--text-2);
-  font-size: 0.92rem;
-  letter-spacing: 0.01em;
+@utility grain {
+  position: relative;
+  isolation: isolate;
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.06;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.9'/></svg>");
+  }
 }
 
-.t-label {
-  font-family: var(--font-mono), monospace;
-  font-weight: 400;
-  font-size: 0.6rem;
-  letter-spacing: 0.16em;
-  color: var(--text-3);
+@utility gold-glow {
+  background: radial-gradient(circle at center, oklch(0.62 0.10 75 / 0.18), transparent 60%);
 }
 
-.t-small {
-  font-family: var(--font-sans), sans-serif;
-  font-size: 0.75rem;
-  font-weight: 300;
-  color: var(--text-2);
-  line-height: 1.7;
-}
-
-/* ══ Focus ═══════════════════════════════════════════════ */
-:focus-visible {
-  outline: 1px solid var(--gold);
-  outline-offset: 3px;
-}
-
-/* ══ Reduced motion ══════════════════════════════════════ */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
@@ -130,175 +130,3 @@ body {
     scroll-behavior: auto !important;
   }
 }
-
-/* ══ Decorative ══════════════════════════════════════════ */
-.gold-rule {
-  display: block;
-  width: 32px;
-  height: 1px;
-  background: var(--gold);
-  opacity: 0.5;
-}
-
-.section-pad { padding: 9rem 0; }
-@media (max-width: 768px) { .section-pad { padding: 6rem 0; } }
-
-/* ══ Keyframes ══════════════════════════════════════════ */
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(28px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to   { opacity: 1; }
-}
-@keyframes scaleIn {
-  from { opacity: 0; transform: scale(0.97); }
-  to   { opacity: 1; transform: scale(1); }
-}
-
-/* ══ Gold text — subtle shimmer, not loud ═══════════════ */
-.gold-text {
-  background: linear-gradient(
-    135deg,
-    var(--copper)      0%,
-    var(--gold)        35%,
-    var(--gold-light)  55%,
-    var(--gold)        75%,
-    var(--copper-light)100%
-  );
-  background-size: 240% auto;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: shimmer 9s linear infinite;
-}
-
-@keyframes shimmer {
-  0%   { background-position: -200% center; }
-  100% { background-position:  200% center; }
-}
-
-/* ══ Noise overlay ═══════════════════════════════════════ */
-.noise::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
-  opacity: 0.02;
-  pointer-events: none;
-  border-radius: inherit;
-}
-
-/* ══ Floating label inputs ══════════════════════════════ */
-.field-wrap { position: relative; }
-.field-wrap input,
-.field-wrap select,
-.field-wrap textarea {
-  width: 100%;
-  background: rgba(255,255,255,0.02);
-  border: 1px solid var(--border-light);
-  border-radius: var(--radius);
-  color: var(--text-1);
-  padding: 26px 18px 10px;
-  font-family: var(--font-sans), sans-serif;
-  font-size: 0.88rem;
-  font-weight: 300;
-  outline: none;
-  transition: border-color 0.28s, background 0.28s;
-  -webkit-appearance: none;
-  letter-spacing: 0.01em;
-}
-.field-wrap input:focus,
-.field-wrap select:focus,
-.field-wrap textarea:focus {
-  border-color: var(--gold);
-  background: rgba(154,124,63,0.04);
-  box-shadow: 0 0 0 3px var(--gold-dim);
-}
-.field-wrap label {
-  position: absolute;
-  top: 50%;
-  left: 17px;
-  transform: translateY(-50%);
-  font-size: 0.6rem;
-  letter-spacing: 0.24em;
-  text-transform: uppercase;
-  color: var(--text-3);
-  pointer-events: none;
-  transition: top 0.2s, font-size 0.2s, color 0.2s;
-  font-family: var(--font-sans);
-}
-.field-wrap.has-value label,
-.field-wrap input:focus ~ label,
-.field-wrap select:focus ~ label,
-.field-wrap textarea:focus ~ label {
-  top: 10px;
-  font-size: 0.52rem;
-  color: var(--gold);
-  transform: none;
-}
-.field-wrap select option { background: var(--surface-1); }
-
-.field-wrap.textarea-wrap label {
-  top: 20px;
-  transform: none;
-}
-.field-wrap.textarea-wrap.has-value label,
-.field-wrap.textarea-wrap textarea:focus ~ label {
-  top: 8px;
-}
-
-/* ══ Buttons ═════════════════════════════════════════════ */
-.btn-gold {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  padding: 15px 36px;
-  background: var(--gold);
-  color: var(--black);
-  font-family: var(--font-sans), sans-serif;
-  font-size: 0.62rem;
-  font-weight: 500;
-  letter-spacing: 0.28em;
-  text-transform: uppercase;
-  border: none;
-  cursor: pointer;
-  transition: background 0.28s, box-shadow 0.28s, transform 0.2s;
-  border-radius: var(--radius);
-  text-decoration: none;
-}
-.btn-gold:hover {
-  background: var(--gold-light);
-  box-shadow: 0 6px 32px rgba(154,124,63,0.32);
-  transform: translateY(-1px);
-}
-.btn-gold:active { transform: translateY(0); }
-
-.btn-outline {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  padding: 14px 36px;
-  background: transparent;
-  color: var(--text-1);
-  font-family: var(--font-sans), sans-serif;
-  font-size: 0.62rem;
-  font-weight: 400;
-  letter-spacing: 0.28em;
-  text-transform: uppercase;
-  border: 1px solid var(--border-mid);
-  cursor: pointer;
-  transition: border-color 0.28s, color 0.28s, background 0.28s;
-  border-radius: var(--radius);
-  text-decoration: none;
-}
-.btn-outline:hover {
-  border-color: var(--gold);
-  color: var(--gold);
-  background: var(--gold-dim);
-}
-
-/* ══ Custom cursor ═══════════════════════════════════════ */
-.custom-cursor-active,
-.custom-cursor-active * { cursor: none !important; }

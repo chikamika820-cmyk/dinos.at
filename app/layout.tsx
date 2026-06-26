@@ -13,20 +13,21 @@ const cormorant = Cormorant_Garamond({
 const dmSans = DM_Sans({
   subsets: ["latin"],
   weight: ["300", "400", "500"],
-  variable: "--font-sans",
+  variable: "--font-dm-sans",
   display: "swap",
 });
 
 const plexMono = IBM_Plex_Mono({
   subsets: ["latin"],
   weight: ["400", "500"],
-  variable: "--font-mono",
+  variable: "--font-plex-mono",
   display: "swap",
 });
 
 export const metadata: Metadata = {
   title: "Dino's Apothecary Bar | Wien",
-  description: "Wiens beste American Bar — Falstaff Award 2023–2025. Handgefertigte Cocktails im 1. Bezirk.",
+  description:
+    "Wiens beste American Bar — vierfach Falstaff prämiert (2023–2025). Handgefertigte Cocktails im 1. Bezirk, am Salzgries.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
