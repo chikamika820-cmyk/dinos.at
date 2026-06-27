@@ -59,6 +59,13 @@
   ::selection { background: var(--gold); color: var(--ink); }
   h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 300; letter-spacing: -0.01em; }
 
+  /* Anchored sections clear the fixed 80px navbar when jumped to */
+  [id] { scroll-margin-top: 6rem; }
+
+  /* Graceful image fallback: a dark surface instead of a broken-image /
+     visible alt-text box while loading or if a source fails to resolve. */
+  img { background-color: var(--ink-3); color: transparent; }
+
   /* Slim luxury scrollbar */
   ::-webkit-scrollbar { width: 3px; }
   ::-webkit-scrollbar-track { background: var(--ink); }

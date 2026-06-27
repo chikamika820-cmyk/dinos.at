@@ -167,7 +167,7 @@ function Navbar() {
       className={`fixed top-0 inset-x-0 z-50 transition-all duration-500 ${scrolled ? "bg-[var(--ink)]/85 backdrop-blur-xl border-b border-[var(--gold)]/15" : "bg-transparent"}`}
     >
       <nav className="mx-auto max-w-7xl px-6 lg:px-10 flex items-center justify-between h-20">
-        <a href="#top" className="font-display italic text-2xl tracking-wide text-[var(--cream)] flex items-center gap-2">
+        <a href="#top" className="font-display italic text-2xl tracking-[0.04em] text-[var(--cream)]">
           <span className="text-[var(--gold-bright)]">D</span>INO&apos;S
         </a>
         <ul className="hidden lg:flex items-center gap-10">
@@ -202,12 +202,12 @@ function Navbar() {
           <motion.div
             initial={{ height: 0 }} animate={{ height: "auto" }} exit={{ height: 0 }}
             transition={{ duration: 0.4, ease: [0.76, 0, 0.24, 1] }}
-            className="lg:hidden overflow-hidden bg-[var(--ink-2)] border-t border-[var(--gold)]/15"
+            className="lg:hidden overflow-hidden bg-[var(--ink)] border-t border-[var(--gold)]/15"
           >
-            <ul className="px-6 py-8 space-y-5">
+            <ul className="px-6 py-10 space-y-6 min-h-[calc(100dvh-5rem)]">
               {links.map(([l, h]) => (
                 <li key={h}>
-                  <a href={h} onClick={() => setOpen(false)} className="block font-display italic text-2xl text-[var(--cream)]">{l}</a>
+                  <a href={h} onClick={() => setOpen(false)} className="block font-display italic text-3xl text-[var(--cream)]">{l}</a>
                 </li>
               ))}
             </ul>
@@ -620,10 +620,10 @@ function Galerie() {
             <a href="#reservierung" className="gold-underline text-[11px] uppercase tracking-[0.35em] text-[var(--cream)]/80">Reservieren →</a>
           </Reveal>
         </div>
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 auto-rows-[46vw] sm:auto-rows-[30vw] md:auto-rows-[230px] lg:auto-rows-[270px] gap-2 md:gap-4">
           {GALLERY.map((src, i) => (
-            <Reveal key={i} delay={i * 0.05}>
-              <div className={`group relative overflow-hidden ${i === 0 ? "md:col-span-2 md:row-span-2 aspect-square" : "aspect-square"}`}>
+            <Reveal key={i} delay={i * 0.05} className={i === 0 ? "col-span-2 row-span-2" : ""}>
+              <div className="group relative h-full w-full overflow-hidden">
                 <img
                   src={src} alt={`Dino's Bar — ${i + 1}`} loading="lazy"
                   className="absolute inset-0 h-full w-full object-cover transition-transform duration-[1.4s] ease-out group-hover:scale-110"
