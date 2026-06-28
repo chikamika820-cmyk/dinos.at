@@ -10,16 +10,15 @@ import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion"
    All image refs are centralised here for a one-line swap.
 ============================================================ */
 const ASSETS = {
-  hero: "https://images.unsplash.com/photo-1572116469696-31de0f17cc34?auto=format&fit=crop&w=2400&q=80",
-  about: "https://images.unsplash.com/photo-1543007630-9710e4a00a20?auto=format&fit=crop&w=1400&q=80",
+  logo: "/IMG_8595.jpeg",   // Dino's Hausapotheke — offizielles Logo (Navy-Lockup)
+  hero: "/IMG_8677.jpeg",   // Barraum
+  about: "/IMG_8674.jpeg",  // Team
   gallery: [
-    "https://images.unsplash.com/photo-1551024709-8f23befc6f87?auto=format&fit=crop&w=1000&q=80",
-    "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&w=1000&q=80",
-    "https://images.unsplash.com/photo-1470337458703-46ad1756a187?auto=format&fit=crop&w=1000&q=80",
-    "https://images.unsplash.com/photo-1536935338788-846bb9981813?auto=format&fit=crop&w=1000&q=80",
-    "https://images.unsplash.com/photo-1574096079513-d8259312b785?auto=format&fit=crop&w=1000&q=80",
+    "/IMG_8675.jpeg",       // Bartender
+    "/IMG_8676.jpeg",       // Lounge
+    "/IMG_8677.jpeg",       // Barraum
+    "/IMG_8674.jpeg",       // Team
   ],
-  reservation: "https://images.unsplash.com/photo-1538488881038-e252a119ace7?auto=format&fit=crop&w=2000&q=80",
 };
 
 const EASE = [0.16, 1, 0.3, 1] as const;
@@ -90,9 +89,9 @@ function Segmented({ items, active, onChange, dark = false }: { items: string[];
 }
 
 /* Placeholder-aware image (dark surface until the real photo loads/replaces) */
-function Img({ src, alt, className = "", placeholder = "var(--surface-2)" }: { src: string; alt: string; className?: string; placeholder?: string }) {
+function Img({ src, alt, className = "", placeholder = "var(--surface-2)", eager = false }: { src: string; alt: string; className?: string; placeholder?: string; eager?: boolean }) {
   return (
-    <img src={src} alt={alt} loading="lazy" className={className} style={{ backgroundColor: placeholder }} />
+    <img src={src} alt={alt} loading={eager ? "eager" : "lazy"} fetchPriority={eager ? "high" : undefined} className={className} style={{ backgroundColor: placeholder }} />
   );
 }
 
@@ -119,8 +118,8 @@ function Navbar() {
   return (
     <header className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${scrolled ? "bg-[var(--bg)]/80 backdrop-blur-xl border-b border-[var(--line)]" : "bg-transparent"}`}>
       <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5 lg:px-8">
-        <a href="#top" className={`font-serif text-2xl italic tracking-[0.02em] transition-colors ${scrolled ? "text-[var(--ink)]" : "text-white"}`}>
-          Dino&apos;s
+        <a href="#top" className="flex items-center" aria-label="Dino's Hausapotheke — Startseite">
+          <img src={ASSETS.logo} alt="Dino's Hausapotheke" className="h-11 w-auto rounded-lg" />
         </a>
         <ul className="hidden items-center gap-9 lg:flex">
           {NAV_LINKS.map(([l, h]) => (
@@ -171,8 +170,9 @@ function Hero() {
   return (
     <section id="top" ref={ref} className="relative flex h-[100svh] min-h-[680px] items-center justify-center overflow-hidden bg-[var(--night)]">
       <motion.div style={{ y }} className="absolute inset-0">
-        <Img src={ASSETS.hero} alt="Dino's Bar Interieur" className="h-full w-full object-cover" placeholder="var(--night-2)" />
-        <div className="absolute inset-0 bg-gradient-to-b from-[var(--night)]/55 via-[var(--night)]/45 to-[var(--night)]" />
+        <Img src={ASSETS.hero} alt="Dino's Hausapotheke — Barraum" eager className="h-full w-full object-cover" placeholder="var(--night-2)" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[var(--night)]/70 via-[var(--night)]/55 to-[var(--night)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_30%,rgba(16,14,11,0.5)_100%)]" />
       </motion.div>
 
       <motion.div style={{ opacity: fade }} className="relative z-10 mx-auto max-w-4xl px-6 text-center">
@@ -250,7 +250,7 @@ function About() {
       <div className="mx-auto grid max-w-6xl items-center gap-12 px-5 py-24 lg:grid-cols-2 lg:gap-20 lg:px-8 lg:py-32">
         <Reveal>
           <div className="relative overflow-hidden rounded-[2rem] ring-1 ring-[var(--line)]">
-            <Img src={ASSETS.about} alt="Dino's — Handwerk an der Bar" className="aspect-[4/5] w-full object-cover" />
+            <Img src={ASSETS.about} alt="Das Team von Dino's Hausapotheke" className="aspect-[3/2] w-full object-cover" />
           </div>
         </Reveal>
         <div>
@@ -381,11 +381,11 @@ function Gallery() {
           </div>
           <Button href="#reservierung" variant="ghost" dark>Platz reservieren</Button>
         </Reveal>
-        <div className="grid auto-rows-[42vw] grid-cols-2 gap-3 sm:auto-rows-[230px] md:auto-rows-[280px] md:grid-cols-3 lg:gap-4">
+        <div className="grid gap-3 sm:grid-cols-2 lg:gap-4">
           {ASSETS.gallery.map((src, i) => (
-            <Reveal key={i} delay={i * 0.05} className={i === 0 ? "col-span-2 row-span-2" : ""}>
-              <div className="group h-full w-full overflow-hidden rounded-3xl ring-1 ring-white/10">
-                <Img src={src} alt={`Dino's — Eindruck ${i + 1}`} placeholder="var(--night-2)" className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105" />
+            <Reveal key={i} delay={i * 0.05}>
+              <div className="group aspect-[4/3] w-full overflow-hidden rounded-3xl ring-1 ring-white/10">
+                <Img src={src} alt={`Dino's Hausapotheke — Eindruck ${i + 1}`} placeholder="var(--night-2)" className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105" />
               </div>
             </Reveal>
           ))}
@@ -494,10 +494,10 @@ function Contact() {
         <Reveal delay={0.12}>
           <div className="flex h-full flex-col rounded-3xl bg-[var(--surface)] p-8 ring-1 ring-[var(--line)]">
             <h3 className="text-sm font-semibold uppercase tracking-wide text-[var(--ink-2)]">Standort</h3>
-            <div className="mt-5 flex flex-1 items-center justify-center rounded-2xl bg-[var(--surface-2)] py-12 text-center">
+            <div className="mt-5 flex flex-1 items-center justify-center rounded-2xl bg-[var(--surface-2)] py-10 text-center">
               <div>
-                <div className="font-serif text-3xl italic text-[var(--gold)]">Dino&apos;s</div>
-                <div className="mt-2 text-sm text-[var(--ink-2)]">Salzgries 19 · 1010 Wien</div>
+                <img src={ASSETS.logo} alt="Dino's Hausapotheke" className="mx-auto h-20 w-auto rounded-xl" />
+                <div className="mt-3 text-sm text-[var(--ink-2)]">Salzgries 19 · 1010 Wien</div>
               </div>
             </div>
             <a href="https://maps.google.com/?q=Salzgries+19,+1010+Wien" target="_blank" rel="noopener noreferrer" className="mt-5 inline-flex items-center justify-center rounded-full bg-[var(--ink)] px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-black">In Google Maps öffnen</a>
@@ -517,8 +517,8 @@ function Footer() {
       <div className="mx-auto max-w-6xl px-5 lg:px-8">
         <div className="flex flex-col justify-between gap-10 border-b border-white/10 pb-10 md:flex-row md:items-end">
           <div>
-            <div className="font-serif text-3xl italic text-[var(--night-ink)]">Dino&apos;s</div>
-            <p className="mt-3 text-sm">Apothecary Bar · Wien</p>
+            <img src={ASSETS.logo} alt="Dino's Hausapotheke" className="h-20 w-auto rounded-xl" />
+            <p className="mt-4 text-sm">Hausapotheke · Wien</p>
           </div>
           <ul className="flex flex-wrap gap-x-7 gap-y-3 text-sm">
             {NAV_LINKS.map(([l, h]) => <li key={h}><a href={h} className="transition-colors hover:text-[var(--night-ink)]">{l}</a></li>)}
