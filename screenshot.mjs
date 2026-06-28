@@ -24,7 +24,7 @@ const shot = async (id, file, wait = 1000) => {
 };
 
 await shot(null, "01-hero.png");
-await shot("#about", "02-about.png");
+await shot("#about", "02-about.png", 2600);
 await shot("#speisekarte", "03-speisekarte.png");
 await shot("#drinks", "04-drinks.png");
 await shot("#galerie", "05-galerie.png");

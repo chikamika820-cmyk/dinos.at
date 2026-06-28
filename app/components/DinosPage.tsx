@@ -2,7 +2,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { motion, useScroll, useTransform, AnimatePresence, useInView, useReducedMotion } from "framer-motion";
+import { motion, useScroll, useTransform, AnimatePresence, useInView, useReducedMotion, MotionConfig, animate } from "framer-motion";
 
 /* ============================================================
    BRAND ASSETS — PLACEHOLDERS
@@ -46,35 +46,28 @@ const staggerGroup = {
   show: { transition: { staggerChildren: 0.12, delayChildren: 0.05 } },
 };
 const staggerItem = {
-  hidden: { opacity: 0, y: 24 },
+  hidden: { opacity: 0, y: 18 },
   show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: EASE } },
 };
 
-/* Count-up number — plays once when scrolled into view, respects reduced motion */
-function CountUp({ value, suffix = "", className = "" }: { value: number; suffix?: string; className?: string }) {
+/* Count-up number — driven by a single in-view trigger (the whole stats group),
+   plays once, updates the DOM via ref (no per-frame React re-renders → 60fps),
+   and respects prefers-reduced-motion. Tabular figures avoid width jitter. */
+function CountUp({ value, suffix = "", play }: { value: number; suffix?: string; play: boolean }) {
   const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-80px" });
   const reduce = useReducedMotion();
-  const [n, setN] = useState(0);
   useEffect(() => {
-    if (!inView) return;
-    if (reduce) {
-      const id = requestAnimationFrame(() => setN(value));
-      return () => cancelAnimationFrame(id);
-    }
-    let raf = 0;
-    const start = performance.now();
-    const dur = 1600;
-    const easeOut = (t: number) => 1 - Math.pow(1 - t, 3);
-    const tick = (now: number) => {
-      const p = Math.min((now - start) / dur, 1);
-      setN(Math.round(easeOut(p) * value));
-      if (p < 1) raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, [inView, reduce, value]);
-  return <span ref={ref} className={className}>{n}{suffix}</span>;
+    const el = ref.current;
+    if (!el || !play) return;
+    if (reduce) { el.textContent = `${value}${suffix}`; return; }
+    const controls = animate(0, value, {
+      duration: 1.6,
+      ease: [0.16, 1, 0.3, 1],
+      onUpdate: (v) => { el.textContent = `${Math.round(v)}${suffix}`; },
+    });
+    return () => controls.stop();
+  }, [play, reduce, value, suffix]);
+  return <span ref={ref} className="tnum">{`0${suffix}`}</span>;
 }
 
 function Eyebrow({ children, className = "" }: { children: React.ReactNode; className?: string }) {
@@ -285,6 +278,9 @@ function About() {
     { value: 300, suffix: "+", label: "Spirituosen" },
     { value: 2019, suffix: "", label: "Gegründet" },
   ];
+  // Single trigger for the whole stats group: fire once the complete group is visible.
+  const statsRef = useRef<HTMLDivElement>(null);
+  const statsInView = useInView(statsRef, { once: true, amount: "all" });
   return (
     <section id="about" className="bg-[var(--surface)]">
       <div className="mx-auto grid max-w-6xl items-center gap-12 px-5 py-24 lg:grid-cols-2 lg:gap-20 lg:px-8 lg:py-32">
@@ -304,10 +300,10 @@ function About() {
               <p>Jeder Cocktail erzählt eine Geschichte: handverlesene Spirituosen, hauseigene Infusionen und die ruhige Präzision eines Handwerks, das mit Leidenschaft gepflegt wird.</p>
             </div>
           </Reveal>
-          <motion.div variants={staggerGroup} initial="hidden" whileInView="show" viewport={{ once: true, margin: "-80px" }} className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <motion.div ref={statsRef} variants={staggerGroup} initial="hidden" animate={statsInView ? "show" : "hidden"} className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-4">
             {stats.map((s, i) => (
               <motion.div key={i} variants={staggerItem} className="rounded-2xl bg-[var(--surface-2)] p-5">
-                <div className="tnum text-3xl font-semibold text-[var(--gold)]"><CountUp value={s.value} suffix={s.suffix} /></div>
+                <div className="text-3xl font-semibold text-[var(--gold)]"><CountUp value={s.value} suffix={s.suffix} play={statsInView} /></div>
                 <div className="mt-1 text-sm text-[var(--ink-2)]">{s.label}</div>
               </motion.div>
             ))}
@@ -606,6 +602,7 @@ function MobileCTA() {
 ============================================================ */
 export default function DinosPage() {
   return (
+    <MotionConfig reducedMotion="user">
     <div className="bg-[var(--bg)] text-[var(--ink)]">
       <Navbar />
       <main>
@@ -623,5 +620,6 @@ export default function DinosPage() {
       <Footer />
       <MobileCTA />
     </div>
+    </MotionConfig>
   );
 }
