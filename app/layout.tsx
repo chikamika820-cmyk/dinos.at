@@ -20,7 +20,7 @@ const cormorant = Cormorant_Garamond({
 });
 
 export const metadata: Metadata = {
-  title: "Dino's Apothecary Bar | Wien",
+  title: "Dino's Hausapotheke | Wien",
   description:
     "Wiens beste American Bar — vierfach Falstaff prämiert (2023–2025). Handgefertigte Cocktails im 1. Bezirk, am Salzgries.",
 };

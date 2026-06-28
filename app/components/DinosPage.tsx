@@ -119,7 +119,7 @@ function Navbar() {
     <header className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${scrolled ? "bg-[var(--bg)]/80 backdrop-blur-xl border-b border-[var(--line)]" : "bg-transparent"}`}>
       <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5 lg:px-8">
         <a href="#top" className="flex items-center" aria-label="Dino's Hausapotheke — Startseite">
-          <img src={ASSETS.logo} alt="Dino's Hausapotheke" className="h-11 w-auto rounded-lg" />
+          <img src={ASSETS.logo} alt="Dino's Hausapotheke" className="h-12 w-auto rounded-xl" />
         </a>
         <ul className="hidden items-center gap-9 lg:flex">
           {NAV_LINKS.map(([l, h]) => (
@@ -172,7 +172,7 @@ function Hero() {
       <motion.div style={{ y }} className="absolute inset-0">
         <Img src={ASSETS.hero} alt="Dino's Hausapotheke — Barraum" eager className="h-full w-full object-cover" placeholder="var(--night-2)" />
         <div className="absolute inset-0 bg-gradient-to-b from-[var(--night)]/70 via-[var(--night)]/55 to-[var(--night)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_30%,rgba(16,14,11,0.5)_100%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_30%,rgba(10,14,36,0.55)_100%)]" />
       </motion.div>
 
       <motion.div style={{ opacity: fade }} className="relative z-10 mx-auto max-w-4xl px-6 text-center">
@@ -189,7 +189,7 @@ function Hero() {
           initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9, ease: EASE, delay: 0.34 }}
           className="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-[var(--night-ink-2)]"
         >
-          Eine Apothecary Bar im Herzen Wiens — vierfach Falstaff prämiert. Handgefertigte Drinks, kuratierte Küche, ruhige Eleganz.
+          Dino&apos;s Hausapotheke im Herzen Wiens — vierfach Falstaff prämiert. Handgefertigte Drinks, kuratierte Küche, ruhige Eleganz.
         </motion.p>
         <motion.div
           initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9, ease: EASE, delay: 0.46 }}
@@ -223,7 +223,7 @@ function Awards() {
     <section className="mx-auto max-w-6xl px-5 py-20 lg:px-8 lg:py-28">
       <Reveal className="mb-12 text-center">
         <Eyebrow>Auszeichnungen</Eyebrow>
-        <h2 className="mx-auto mt-4 max-w-2xl text-4xl font-semibold tracking-[-0.03em] sm:text-5xl">Vierfach Falstaff prämiert</h2>
+        <h2 className="mx-auto mt-4 max-w-2xl text-4xl font-semibold tracking-[-0.03em] text-balance sm:text-5xl">Vierfach Falstaff prämiert</h2>
       </Reveal>
       <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
         {cards.map((c, i) => (
@@ -256,7 +256,7 @@ function About() {
         <div>
           <Reveal><Eyebrow>Herkunft</Eyebrow></Reveal>
           <Reveal delay={0.05}>
-            <h2 className="mt-5 text-4xl font-semibold tracking-[-0.03em] sm:text-5xl">Mehr als eine Bar — eine Erfahrung.</h2>
+            <h2 className="mt-5 text-4xl font-semibold tracking-[-0.03em] text-balance sm:text-5xl">Mehr als eine Bar — eine Erfahrung.</h2>
           </Reveal>
           <Reveal delay={0.1}>
             <div className="mt-7 space-y-5 text-lg leading-relaxed text-[var(--ink-2)]">
@@ -350,7 +350,7 @@ function MenuSection({ id, eyebrow, title, intro, data }: { id: string; eyebrow:
     <section id={id} className="mx-auto max-w-6xl px-5 py-24 lg:px-8 lg:py-32">
       <Reveal className="mb-10 text-center">
         <Eyebrow>{eyebrow}</Eyebrow>
-        <h2 className="mx-auto mt-4 max-w-2xl text-4xl font-semibold tracking-[-0.03em] sm:text-5xl">{title}</h2>
+        <h2 className="mx-auto mt-4 max-w-2xl text-4xl font-semibold tracking-[-0.03em] text-balance sm:text-5xl">{title}</h2>
         <p className="mx-auto mt-4 max-w-xl text-lg text-[var(--ink-2)]">{intro}</p>
       </Reveal>
       <Reveal className="mb-10 flex justify-center"><Segmented items={cats} active={active} onChange={setActive} /></Reveal>
@@ -377,7 +377,7 @@ function Gallery() {
         <Reveal className="mb-12 flex flex-col items-start justify-between gap-5 sm:flex-row sm:items-end">
           <div>
             <Eyebrow className="text-[var(--gold)]">Atmosphäre</Eyebrow>
-            <h2 className="mt-4 max-w-xl text-4xl font-semibold tracking-[-0.03em] text-[var(--night-ink)] sm:text-5xl">Momente bei Dino&apos;s</h2>
+            <h2 className="mt-4 max-w-xl text-4xl font-semibold tracking-[-0.03em] text-balance text-[var(--night-ink)] sm:text-5xl">Momente bei Dino&apos;s</h2>
           </div>
           <Button href="#reservierung" variant="ghost" dark>Platz reservieren</Button>
         </Reveal>
@@ -415,7 +415,7 @@ function Reservation() {
         <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
           <div>
             <Reveal><Eyebrow>Reservierung</Eyebrow></Reveal>
-            <Reveal delay={0.05}><h2 className="mt-5 text-4xl font-semibold tracking-[-0.03em] sm:text-5xl">Ihren Abend vorbestellen.</h2></Reveal>
+            <Reveal delay={0.05}><h2 className="mt-5 text-4xl font-semibold tracking-[-0.03em] text-balance sm:text-5xl">Ihren Abend vorbestellen.</h2></Reveal>
             <Reveal delay={0.1}><p className="mt-6 max-w-md text-lg leading-relaxed text-[var(--ink-2)]">Wir empfehlen eine Reservierung — besonders Freitag und Samstag. Für größere Gruppen kontaktieren Sie uns gerne direkt.</p></Reveal>
             <Reveal delay={0.16}>
               <div className="mt-8 flex flex-wrap gap-x-10 gap-y-4 text-[15px]">
@@ -428,7 +428,7 @@ function Reservation() {
             <div className="overflow-hidden rounded-[2rem] bg-[var(--surface-2)] p-7 ring-1 ring-[var(--line)] sm:p-9">
               {done ? (
                 <div className="py-12 text-center">
-                  <div className="text-3xl font-semibold tracking-[-0.03em]">Vielen Dank.</div>
+                  <div className="text-3xl font-semibold tracking-[-0.03em] text-balance">Vielen Dank.</div>
                   <p className="mt-3 text-[var(--ink-2)]">Ihre Anfrage ist eingegangen — wir bestätigen in Kürze.</p>
                 </div>
               ) : (
@@ -460,7 +460,7 @@ function Contact() {
     <section id="kontakt" className="mx-auto max-w-6xl px-5 py-24 lg:px-8 lg:py-32">
       <Reveal className="mb-12">
         <Eyebrow>Kontakt & Standort</Eyebrow>
-        <h2 className="mt-4 max-w-2xl text-4xl font-semibold tracking-[-0.03em] sm:text-5xl">Besuchen Sie uns am Salzgries.</h2>
+        <h2 className="mt-4 max-w-2xl text-4xl font-semibold tracking-[-0.03em] text-balance sm:text-5xl">Besuchen Sie uns am Salzgries.</h2>
       </Reveal>
       <div className="grid gap-4 md:grid-cols-3">
         <Reveal>
@@ -567,7 +567,7 @@ export default function DinosPage() {
         <Awards />
         <About />
         <MenuSection id="speisekarte" eyebrow="Tafel" title="Speisekarte" intro="Eine kuratierte Auswahl, die unsere Drinks begleitet — saisonal, ehrlich, präzise." data={FOOD} />
-        <div className="bg-[var(--surface)]">
+        <div className="bg-[var(--surface-2)]">
           <MenuSection id="drinks" eyebrow="Rezepturen" title="Getränkekarte" intro="Über 150 Cocktails, 300+ Spirituosen — jede Kreation aus unserer hauseigenen Apotheke." data={DRINKS} />
         </div>
         <Gallery />
