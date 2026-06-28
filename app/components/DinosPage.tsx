@@ -2,7 +2,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
+import { motion, useScroll, useTransform, AnimatePresence, useInView, useReducedMotion } from "framer-motion";
 
 /* ============================================================
    BRAND ASSETS — PLACEHOLDERS
@@ -38,6 +38,43 @@ function Reveal({ children, delay = 0, y = 20, className = "" }: { children: Rea
       {children}
     </motion.div>
   );
+}
+
+/* Staggered reveal for groups of similar cards (fade-in + slide-up, sequential) */
+const staggerGroup = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.12, delayChildren: 0.05 } },
+};
+const staggerItem = {
+  hidden: { opacity: 0, y: 24 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: EASE } },
+};
+
+/* Count-up number — plays once when scrolled into view, respects reduced motion */
+function CountUp({ value, suffix = "", className = "" }: { value: number; suffix?: string; className?: string }) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-80px" });
+  const reduce = useReducedMotion();
+  const [n, setN] = useState(0);
+  useEffect(() => {
+    if (!inView) return;
+    if (reduce) {
+      const id = requestAnimationFrame(() => setN(value));
+      return () => cancelAnimationFrame(id);
+    }
+    let raf = 0;
+    const start = performance.now();
+    const dur = 1600;
+    const easeOut = (t: number) => 1 - Math.pow(1 - t, 3);
+    const tick = (now: number) => {
+      const p = Math.min((now - start) / dur, 1);
+      setN(Math.round(easeOut(p) * value));
+      if (p < 1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [inView, reduce, value]);
+  return <span ref={ref} className={className}>{n}{suffix}</span>;
 }
 
 function Eyebrow({ children, className = "" }: { children: React.ReactNode; className?: string }) {
@@ -225,17 +262,15 @@ function Awards() {
         <Eyebrow>Auszeichnungen</Eyebrow>
         <h2 className="mx-auto mt-4 max-w-2xl text-4xl font-semibold tracking-[-0.03em] text-balance sm:text-5xl">Vierfach Falstaff prämiert</h2>
       </Reveal>
-      <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+      <motion.div variants={staggerGroup} initial="hidden" whileInView="show" viewport={{ once: true, margin: "-80px" }} className="grid grid-cols-2 gap-4 md:grid-cols-4">
         {cards.map((c, i) => (
-          <Reveal key={i} delay={i * 0.06}>
-            <div className="flex h-full flex-col items-center rounded-3xl bg-[var(--surface)] p-8 text-center ring-1 ring-[var(--line)] transition-shadow duration-300 hover:shadow-[0_12px_40px_-12px_rgba(26,22,19,0.18)]">
-              <span className="font-serif text-lg italic text-[var(--gold)]">Falstaff</span>
-              <span className="tnum mt-3 text-4xl font-semibold">{c.year}</span>
-              <span className="mt-3 text-sm text-[var(--ink-2)]">{c.label}</span>
-            </div>
-          </Reveal>
+          <motion.div key={i} variants={staggerItem} className="flex h-full flex-col items-center rounded-3xl bg-[var(--surface)] p-8 text-center ring-1 ring-[var(--line)] transition-shadow duration-300 hover:shadow-[0_12px_40px_-12px_rgba(26,22,19,0.18)]">
+            <span className="font-serif text-lg italic text-[var(--gold)]">Falstaff</span>
+            <span className="tnum mt-3 text-4xl font-semibold">{c.year}</span>
+            <span className="mt-3 text-sm text-[var(--ink-2)]">{c.label}</span>
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
     </section>
   );
 }
@@ -244,7 +279,12 @@ function Awards() {
    ABOUT — light, editorial-clean
 ============================================================ */
 function About() {
-  const stats = [["4×", "Falstaff Award"], ["150+", "Cocktails"], ["300+", "Spirituosen"], ["2019", "Gegründet"]];
+  const stats = [
+    { value: 4, suffix: "×", label: "Falstaff Award" },
+    { value: 150, suffix: "+", label: "Cocktails" },
+    { value: 300, suffix: "+", label: "Spirituosen" },
+    { value: 2019, suffix: "", label: "Gegründet" },
+  ];
   return (
     <section id="about" className="bg-[var(--surface)]">
       <div className="mx-auto grid max-w-6xl items-center gap-12 px-5 py-24 lg:grid-cols-2 lg:gap-20 lg:px-8 lg:py-32">
@@ -264,16 +304,14 @@ function About() {
               <p>Jeder Cocktail erzählt eine Geschichte: handverlesene Spirituosen, hauseigene Infusionen und die ruhige Präzision eines Handwerks, das mit Leidenschaft gepflegt wird.</p>
             </div>
           </Reveal>
-          <Reveal delay={0.16}>
-            <div className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-4">
-              {stats.map(([n, l], i) => (
-                <div key={i} className="rounded-2xl bg-[var(--surface-2)] p-5">
-                  <div className="tnum text-3xl font-semibold text-[var(--gold)]">{n}</div>
-                  <div className="mt-1 text-sm text-[var(--ink-2)]">{l}</div>
-                </div>
-              ))}
-            </div>
-          </Reveal>
+          <motion.div variants={staggerGroup} initial="hidden" whileInView="show" viewport={{ once: true, margin: "-80px" }} className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-4">
+            {stats.map((s, i) => (
+              <motion.div key={i} variants={staggerItem} className="rounded-2xl bg-[var(--surface-2)] p-5">
+                <div className="tnum text-3xl font-semibold text-[var(--gold)]"><CountUp value={s.value} suffix={s.suffix} /></div>
+                <div className="mt-1 text-sm text-[var(--ink-2)]">{s.label}</div>
+              </motion.div>
+            ))}
+          </motion.div>
         </div>
       </div>
     </section>
@@ -494,11 +532,19 @@ function Contact() {
         <Reveal delay={0.12}>
           <div className="flex h-full flex-col rounded-3xl bg-[var(--surface)] p-8 ring-1 ring-[var(--line)]">
             <h3 className="text-sm font-semibold uppercase tracking-wide text-[var(--ink-2)]">Standort</h3>
-            <div className="mt-5 flex flex-1 items-center justify-center rounded-2xl bg-[var(--surface-2)] py-10 text-center">
-              <div>
-                <img src={ASSETS.logo} alt="Dino's Hausapotheke" className="mx-auto h-20 w-auto rounded-xl" />
-                <div className="mt-3 text-sm text-[var(--ink-2)]">Salzgries 19 · 1010 Wien</div>
-              </div>
+            <a href="https://maps.google.com/?q=Salzgries+19,+1010+Wien" target="_blank" rel="noopener noreferrer" aria-label="Standort auf Google Maps öffnen" className="group relative mt-5 block overflow-hidden rounded-2xl ring-1 ring-[var(--line)]">
+              <iframe
+                title="Standort von Dino's Hausapotheke — Salzgries 19, 1010 Wien"
+                src="https://maps.google.com/maps?q=Salzgries%2019%2C%201010%20Wien&t=&z=16&ie=UTF8&iwloc=&output=embed"
+                className="pointer-events-none block h-40 w-full transition-transform duration-500 group-hover:scale-105"
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+              <span aria-hidden className="absolute inset-0" />
+            </a>
+            <div className="mt-5 flex flex-col items-center text-center">
+              <img src={ASSETS.logo} alt="Dino's Hausapotheke" className="h-12 w-auto rounded-xl" />
+              <div className="mt-2 text-sm text-[var(--ink-2)]">Salzgries 19 · 1010 Wien</div>
             </div>
             <a href="https://maps.google.com/?q=Salzgries+19,+1010+Wien" target="_blank" rel="noopener noreferrer" className="mt-5 inline-flex items-center justify-center rounded-full bg-[var(--ink)] px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-black">In Google Maps öffnen</a>
           </div>
