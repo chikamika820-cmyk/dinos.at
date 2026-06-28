@@ -1,26 +1,21 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, DM_Sans, IBM_Plex_Mono } from "next/font/google";
+import { Inter, Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
 
+// Sans-led system (Apple-clean). Inter carries display + UI + numerals.
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-sans",
+  display: "swap",
+});
+
+// Serif reserved exclusively for the "Dino's" wordmark / brand character.
 const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
-  weight: ["300", "400", "600"],
+  weight: ["400", "500", "600"],
   style: ["normal", "italic"],
-  variable: "--font-cormorant",
-  display: "swap",
-});
-
-const dmSans = DM_Sans({
-  subsets: ["latin"],
-  weight: ["300", "400", "500"],
-  variable: "--font-dm-sans",
-  display: "swap",
-});
-
-const plexMono = IBM_Plex_Mono({
-  subsets: ["latin"],
-  weight: ["400", "500"],
-  variable: "--font-plex-mono",
+  variable: "--font-serif",
   display: "swap",
 });
 
@@ -32,7 +27,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="de" className={`${cormorant.variable} ${dmSans.variable} ${plexMono.variable}`}>
+    <html lang="de" className={`${inter.variable} ${cormorant.variable}`}>
       <body>{children}</body>
     </html>
   );
