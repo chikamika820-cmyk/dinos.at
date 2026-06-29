@@ -10,7 +10,8 @@ import { motion, useScroll, useTransform, AnimatePresence, useInView, useReduced
    All image refs are centralised here for a one-line swap.
 ============================================================ */
 const ASSETS = {
-  logo: "/IMG_8595.jpeg",   // Dino's Hausapotheke — offizielles Logo (Navy-Lockup)
+  logo: "/IMG_8595.jpeg",   // offizielles Logo (Navy-Lockup) — Navbar/Footer/Kontakt
+  logoTransparent: "/logo-transparent.png", // freigestellt — für den Hero auf dem Foto
   hero: "/IMG_8677.jpeg",   // Barraum
   about: "/IMG_8674.jpeg",  // Team
   gallery: [
@@ -201,26 +202,25 @@ function Hero() {
     <section id="top" ref={ref} className="relative flex h-[100svh] min-h-[680px] items-center justify-center overflow-hidden bg-[var(--night)]">
       <motion.div style={{ y }} className="absolute inset-0">
         <Img src={ASSETS.hero} alt="Dino's Hausapotheke — Barraum" eager className="h-full w-full object-cover" placeholder="var(--night-2)" />
-        <div className="absolute inset-0 bg-gradient-to-b from-[var(--night)]/70 via-[var(--night)]/55 to-[var(--night)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_28%,rgba(5,4,35,0.62)_100%)]" />
-        {/* Soft pool in the exact logo navy so the logo's backdrop blends seamlessly */}
-        <div className="absolute inset-0 bg-[radial-gradient(60%_55%_at_50%_43%,rgba(2,1,34,0.96)_0%,rgba(2,1,34,0.66)_34%,transparent_66%)]" />
+        {/* Light grade only — keep the bar photo fully visible; bottom fades to navy */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[var(--night)]/45 via-[var(--night)]/25 to-[var(--night)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_38%,rgba(5,4,35,0.5)_100%)]" />
       </motion.div>
 
       <motion.div style={{ opacity: fade }} className="relative z-10 mx-auto max-w-4xl px-6 text-center">
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9, ease: EASE, delay: 0.1 }}>
-          <Eyebrow className="text-[var(--gold)]">Wien · 1. Bezirk</Eyebrow>
+          <Eyebrow className="text-[var(--gold)] [text-shadow:0_1px_12px_rgba(2,1,34,0.85)]">Wien · 1. Bezirk</Eyebrow>
         </motion.div>
         <motion.h1
           initial={{ opacity: 0, y: 22, scale: 0.96 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ duration: 1, ease: EASE, delay: 0.2 }}
           className="mt-4"
         >
-          {/* Official logo, used 1:1 — no recreated typography */}
-          <img src={ASSETS.logo} alt="Dino's Hausapotheke" width={1078} height={1062} className="mx-auto h-auto w-[clamp(210px,38vw,340px)]" />
+          {/* Official logo, cut out (transparent) and placed straight on the photo — only a soft glow, no box */}
+          <img src={ASSETS.logoTransparent} alt="Dino's Hausapotheke" width={1078} height={1062} className="mx-auto h-auto w-[clamp(168px,30vw,280px)] [filter:drop-shadow(0_4px_10px_rgba(2,1,34,0.55))_drop-shadow(0_10px_34px_rgba(0,0,0,0.45))]" />
         </motion.h1>
         <motion.p
           initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9, ease: EASE, delay: 0.34 }}
-          className="mx-auto mt-7 max-w-xl text-lg leading-relaxed text-[var(--night-ink)]"
+          className="mx-auto mt-7 max-w-xl text-lg leading-relaxed text-[var(--night-ink)] [text-shadow:0_1px_16px_rgba(2,1,34,0.9)]"
         >
           Wiens preisgekrönte Cocktailbar seit 2019.
         </motion.p>
