@@ -241,49 +241,23 @@ function Hero() {
 }
 
 /* ============================================================
-   AWARDS — light, card row
+   AWARDS — official Falstaff graphic, embedded 1:1 on brand navy.
+   No custom cards/colours/text. Add the file at public/falstaff-awards.png
+   (cropped to the four awards, without the social-media icons).
 ============================================================ */
-const AWARDS = [
-  { title: "Beste American Bar", year: "2025" },
-  { title: "Beste American Bar", year: "2024" },
-  { title: "Beste American Bar", year: "2023" },
-  { title: "Bartender des Jahres", year: "2024", sub: "Heinz Kaiser" },
-];
+const FALSTAFF_GRAPHIC = "/falstaff-awards.png";
 
 function Awards() {
   return (
-    <section className="relative overflow-hidden bg-[var(--night)] py-24 lg:py-32">
-      {/* Premium light accents on deep navy */}
-      <div aria-hidden className="pointer-events-none absolute inset-0">
-        <div className="absolute -top-24 left-1/2 h-[420px] w-[820px] -translate-x-1/2 rounded-full bg-[radial-gradient(ellipse,rgba(188,149,53,0.16),transparent_70%)] blur-2xl" />
-        <div className="absolute bottom-[-15%] right-[-8%] h-[360px] w-[360px] rounded-full bg-[radial-gradient(circle,rgba(188,149,53,0.10),transparent_70%)] blur-2xl" />
-        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[rgba(188,149,53,0.25)] to-transparent" />
-      </div>
-
-      <div className="relative mx-auto max-w-6xl px-5 lg:px-8">
-        <Reveal className="mb-14 text-center">
-          <Eyebrow className="text-[var(--gold)]">Auszeichnungen</Eyebrow>
-          <h2 className="mx-auto mt-4 max-w-2xl text-4xl font-semibold tracking-[-0.03em] text-balance text-[var(--night-ink)] sm:text-5xl">Vierfach Falstaff prämiert</h2>
-          <p className="mx-auto mt-4 max-w-md text-[var(--night-ink-2)]">Ausgezeichnet vom Falstaff Barguide — Wiens beste American Bar, drei Jahre in Folge.</p>
+    <section className="bg-[var(--night)] py-20 lg:py-28">
+      <div className="mx-auto max-w-5xl px-5 lg:px-8">
+        <Reveal>
+          <img
+            src={FALSTAFF_GRAPHIC}
+            alt="Falstaff Auszeichnungen: Beste American Bar 2023, 2024, 2025 und Bartender des Jahres 2024 (Heinz Kaiser)"
+            className="mx-auto w-full max-w-3xl"
+          />
         </Reveal>
-
-        <motion.div variants={staggerGroup} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.3 }} className="grid grid-cols-2 gap-4 md:grid-cols-4 lg:gap-5">
-          {AWARDS.map((c, i) => (
-            <motion.div
-              key={i}
-              variants={staggerItem}
-              className="group glass relative flex h-full flex-col items-center overflow-hidden rounded-[1.75rem] px-6 py-9 text-center transition-all duration-500 hover:-translate-y-1.5 hover:border-[rgba(188,149,53,0.45)] hover:shadow-[0_24px_60px_-24px_rgba(0,0,0,0.6)]"
-            >
-              <span aria-hidden className="absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-[var(--gold)] to-transparent opacity-70" />
-              <span className="font-serif text-xl italic lowercase text-[var(--night-ink)]">falstaff</span>
-              <span className="mt-1 text-[10px] uppercase tracking-[0.32em] text-[var(--night-ink-2)]">Barguide</span>
-              <span aria-hidden className="my-5 h-9 w-px bg-gradient-to-b from-[var(--gold)] to-transparent opacity-70" />
-              <span className="text-[13px] font-medium uppercase tracking-[0.12em] text-[var(--gold)]">{c.title}</span>
-              <span className="tnum mt-2 text-3xl font-semibold text-[var(--night-ink)]">{c.year}</span>
-              {c.sub && <span className="mt-2 text-[11px] uppercase tracking-[0.22em] text-[var(--night-ink-2)]">{c.sub}</span>}
-            </motion.div>
-          ))}
-        </motion.div>
       </div>
     </section>
   );
