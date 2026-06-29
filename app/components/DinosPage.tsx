@@ -149,7 +149,7 @@ function Navbar() {
     <header className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${scrolled ? "bg-[var(--bg)]/80 backdrop-blur-xl border-b border-[var(--line)]" : "bg-transparent"}`}>
       <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5 lg:px-8">
         <a href="#top" className="flex items-center" aria-label="Dino's Hausapotheke — Startseite">
-          <img src={ASSETS.logo} alt="Dino's Hausapotheke" className="h-12 w-auto rounded-xl" />
+          <img src={ASSETS.logo} alt="Dino's Hausapotheke" width={72} height={72} className="h-9 w-auto rounded-lg" />
         </a>
         <ul className="hidden items-center gap-9 lg:flex">
           {NAV_LINKS.map(([l, h]) => (
@@ -202,24 +202,25 @@ function Hero() {
       <motion.div style={{ y }} className="absolute inset-0">
         <Img src={ASSETS.hero} alt="Dino's Hausapotheke — Barraum" eager className="h-full w-full object-cover" placeholder="var(--night-2)" />
         <div className="absolute inset-0 bg-gradient-to-b from-[var(--night)]/70 via-[var(--night)]/55 to-[var(--night)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_30%,rgba(10,14,36,0.55)_100%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_28%,rgba(5,4,35,0.62)_100%)]" />
       </motion.div>
 
       <motion.div style={{ opacity: fade }} className="relative z-10 mx-auto max-w-4xl px-6 text-center">
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9, ease: EASE, delay: 0.1 }}>
-          <Eyebrow className="text-[var(--night-ink-2)]">Wien · 1. Bezirk · Seit 2019</Eyebrow>
+          <Eyebrow className="text-[var(--gold)]">Wien · 1. Bezirk</Eyebrow>
         </motion.div>
         <motion.h1
           initial={{ opacity: 0, y: 22 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, ease: EASE, delay: 0.2 }}
-          className="mt-6 text-[clamp(2.75rem,7vw,5.5rem)] font-semibold leading-[1.02] tracking-[-0.035em] text-[var(--night-ink)]"
+          className="mt-6 text-[var(--gold)]"
         >
-          Die Kunst des<br />perfekten Cocktails.
+          <span className="block text-[clamp(3rem,9vw,7rem)] font-semibold leading-[0.95] tracking-[-0.02em]">DINO&apos;S</span>
+          <span className="mt-3 block text-[clamp(0.95rem,2.6vw,1.6rem)] font-medium uppercase tracking-[0.34em]">Hausapotheke</span>
         </motion.h1>
         <motion.p
           initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9, ease: EASE, delay: 0.34 }}
-          className="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-[var(--night-ink-2)]"
+          className="mx-auto mt-7 max-w-xl text-lg leading-relaxed text-[var(--night-ink)]"
         >
-          Dino&apos;s Hausapotheke im Herzen Wiens — vierfach Falstaff prämiert. Handgefertigte Drinks, kuratierte Küche, ruhige Eleganz.
+          Wiens preisgekrönte Cocktailbar seit 2019.
         </motion.p>
         <motion.div
           initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9, ease: EASE, delay: 0.46 }}
@@ -242,28 +243,48 @@ function Hero() {
 /* ============================================================
    AWARDS — light, card row
 ============================================================ */
+const AWARDS = [
+  { title: "Beste American Bar", year: "2025" },
+  { title: "Beste American Bar", year: "2024" },
+  { title: "Beste American Bar", year: "2023" },
+  { title: "Bartender des Jahres", year: "2024", sub: "Heinz Kaiser" },
+];
+
 function Awards() {
-  const cards = [
-    { year: "2023", label: "Beste American Bar" },
-    { year: "2024", label: "Beste American Bar" },
-    { year: "2025", label: "Beste American Bar" },
-    { year: "2024", label: "Bartender des Jahres" },
-  ];
   return (
-    <section className="mx-auto max-w-6xl px-5 py-20 lg:px-8 lg:py-28">
-      <Reveal className="mb-12 text-center">
-        <Eyebrow>Auszeichnungen</Eyebrow>
-        <h2 className="mx-auto mt-4 max-w-2xl text-4xl font-semibold tracking-[-0.03em] text-balance sm:text-5xl">Vierfach Falstaff prämiert</h2>
-      </Reveal>
-      <motion.div variants={staggerGroup} initial="hidden" whileInView="show" viewport={{ once: true, margin: "-80px" }} className="grid grid-cols-2 gap-4 md:grid-cols-4">
-        {cards.map((c, i) => (
-          <motion.div key={i} variants={staggerItem} className="flex h-full flex-col items-center rounded-3xl bg-[var(--surface)] p-8 text-center ring-1 ring-[var(--line)] transition-shadow duration-300 hover:shadow-[0_12px_40px_-12px_rgba(26,22,19,0.18)]">
-            <span className="font-serif text-lg italic text-[var(--gold)]">Falstaff</span>
-            <span className="tnum mt-3 text-4xl font-semibold">{c.year}</span>
-            <span className="mt-3 text-sm text-[var(--ink-2)]">{c.label}</span>
-          </motion.div>
-        ))}
-      </motion.div>
+    <section className="relative overflow-hidden bg-[var(--night)] py-24 lg:py-32">
+      {/* Premium light accents on deep navy */}
+      <div aria-hidden className="pointer-events-none absolute inset-0">
+        <div className="absolute -top-24 left-1/2 h-[420px] w-[820px] -translate-x-1/2 rounded-full bg-[radial-gradient(ellipse,rgba(188,149,53,0.16),transparent_70%)] blur-2xl" />
+        <div className="absolute bottom-[-15%] right-[-8%] h-[360px] w-[360px] rounded-full bg-[radial-gradient(circle,rgba(188,149,53,0.10),transparent_70%)] blur-2xl" />
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[rgba(188,149,53,0.25)] to-transparent" />
+      </div>
+
+      <div className="relative mx-auto max-w-6xl px-5 lg:px-8">
+        <Reveal className="mb-14 text-center">
+          <Eyebrow className="text-[var(--gold)]">Auszeichnungen</Eyebrow>
+          <h2 className="mx-auto mt-4 max-w-2xl text-4xl font-semibold tracking-[-0.03em] text-balance text-[var(--night-ink)] sm:text-5xl">Vierfach Falstaff prämiert</h2>
+          <p className="mx-auto mt-4 max-w-md text-[var(--night-ink-2)]">Ausgezeichnet vom Falstaff Barguide — Wiens beste American Bar, drei Jahre in Folge.</p>
+        </Reveal>
+
+        <motion.div variants={staggerGroup} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.3 }} className="grid grid-cols-2 gap-4 md:grid-cols-4 lg:gap-5">
+          {AWARDS.map((c, i) => (
+            <motion.div
+              key={i}
+              variants={staggerItem}
+              className="group glass relative flex h-full flex-col items-center overflow-hidden rounded-[1.75rem] px-6 py-9 text-center transition-all duration-500 hover:-translate-y-1.5 hover:border-[rgba(188,149,53,0.45)] hover:shadow-[0_24px_60px_-24px_rgba(0,0,0,0.6)]"
+            >
+              <span aria-hidden className="absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-[var(--gold)] to-transparent opacity-70" />
+              <span className="font-serif text-xl italic lowercase text-[var(--night-ink)]">falstaff</span>
+              <span className="mt-1 text-[10px] uppercase tracking-[0.32em] text-[var(--night-ink-2)]">Barguide</span>
+              <span aria-hidden className="my-5 h-9 w-px bg-gradient-to-b from-[var(--gold)] to-transparent opacity-70" />
+              <span className="text-[13px] font-medium uppercase tracking-[0.12em] text-[var(--gold)]">{c.title}</span>
+              <span className="tnum mt-2 text-3xl font-semibold text-[var(--night-ink)]">{c.year}</span>
+              {c.sub && <span className="mt-2 text-[11px] uppercase tracking-[0.22em] text-[var(--night-ink-2)]">{c.sub}</span>}
+            </motion.div>
+          ))}
+        </motion.div>
+      </div>
     </section>
   );
 }

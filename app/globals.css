@@ -34,23 +34,23 @@
 }
 
 :root {
-  /* ── Light frame — soft ivory, paired with brand navy + gold ── */
-  --bg:        #F5F3ED;
+  /* ── Light frame — clean, cool off-white (less beige), brand-forward ── */
+  --bg:        #F2F3F5;
   --surface:   #FFFFFF;
-  --surface-2: #ECE8DF;
-  --ink:       #15182B;   /* deep navy text (brand) */
-  --ink-2:     #5B6173;   /* cool muted */
-  --line:      rgba(21,24,43,0.10);
+  --surface-2: #E8EAEF;
+  --ink:       #0C0E26;   /* deep navy text (brand) */
+  --ink-2:     #565B6E;   /* cool muted */
+  --line:      rgba(12,14,38,0.10);
 
-  /* ── Brand gold (from the logo) — precise accent ── */
-  --gold:      #A6843C;
-  --gold-deep: #846833;
+  /* ── Brand gold — EXACT logo value ── */
+  --gold:      #BC9535;
+  --gold-deep: #9A7A2B;
 
-  /* ── Dark cinematic sections — brand navy (matches the logo) ── */
-  --night:      #0A0E24;
-  --night-2:    #141A38;
-  --night-ink:  #F2EEE4;  /* cream on navy */
-  --night-ink-2:#9DA2B5;  /* muted on navy */
+  /* ── Dark sections — brand navy (sampled from the logo: #020122) ── */
+  --night:      #050423;  /* deep brand navy */
+  --night-2:    #0E0D33;  /* elevated navy / glass base */
+  --night-ink:  #F4F1EA;  /* warm cream on navy (never pure white) */
+  --night-ink-2:#9A9FB5;  /* muted on navy */
 
   --ease-out:    cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
@@ -108,6 +108,14 @@
 @utility tnum {
   font-variant-numeric: tabular-nums;
   letter-spacing: 0;
+}
+
+/* Frosted glass panel — used on dark premium sections */
+@utility glass {
+  background: rgba(255, 255, 255, 0.045);
+  backdrop-filter: blur(16px) saturate(1.1);
+  -webkit-backdrop-filter: blur(16px) saturate(1.1);
+  border: 1px solid rgba(255, 255, 255, 0.09);
 }
 
 @media (prefers-reduced-motion: reduce) {
