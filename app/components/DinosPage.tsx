@@ -203,6 +203,8 @@ function Hero() {
         <Img src={ASSETS.hero} alt="Dino's Hausapotheke — Barraum" eager className="h-full w-full object-cover" placeholder="var(--night-2)" />
         <div className="absolute inset-0 bg-gradient-to-b from-[var(--night)]/70 via-[var(--night)]/55 to-[var(--night)]" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_28%,rgba(5,4,35,0.62)_100%)]" />
+        {/* Soft pool in the exact logo navy so the logo's backdrop blends seamlessly */}
+        <div className="absolute inset-0 bg-[radial-gradient(60%_55%_at_50%_43%,rgba(2,1,34,0.96)_0%,rgba(2,1,34,0.66)_34%,transparent_66%)]" />
       </motion.div>
 
       <motion.div style={{ opacity: fade }} className="relative z-10 mx-auto max-w-4xl px-6 text-center">
@@ -210,11 +212,11 @@ function Hero() {
           <Eyebrow className="text-[var(--gold)]">Wien · 1. Bezirk</Eyebrow>
         </motion.div>
         <motion.h1
-          initial={{ opacity: 0, y: 22 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, ease: EASE, delay: 0.2 }}
-          className="mt-6 text-[var(--gold)]"
+          initial={{ opacity: 0, y: 22, scale: 0.96 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ duration: 1, ease: EASE, delay: 0.2 }}
+          className="mt-4"
         >
-          <span className="block text-[clamp(3rem,9vw,7rem)] font-semibold leading-[0.95] tracking-[-0.02em]">DINO&apos;S</span>
-          <span className="mt-3 block text-[clamp(0.95rem,2.6vw,1.6rem)] font-medium uppercase tracking-[0.34em]">Hausapotheke</span>
+          {/* Official logo, used 1:1 — no recreated typography */}
+          <img src={ASSETS.logo} alt="Dino's Hausapotheke" width={1078} height={1062} className="mx-auto h-auto w-[clamp(210px,38vw,340px)]" />
         </motion.h1>
         <motion.p
           initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9, ease: EASE, delay: 0.34 }}
