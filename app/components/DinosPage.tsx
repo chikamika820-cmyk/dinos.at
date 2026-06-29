@@ -202,9 +202,11 @@ function Hero() {
     <section id="top" ref={ref} className="relative flex h-[100svh] min-h-[680px] items-center justify-center overflow-hidden bg-[var(--night)]">
       <motion.div style={{ y }} className="absolute inset-0">
         <Img src={ASSETS.hero} alt="Dino's Hausapotheke — Barraum" eager className="h-full w-full object-cover" placeholder="var(--night-2)" />
-        {/* Light grade only — keep the bar photo fully visible; bottom fades to navy */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[var(--night)]/45 via-[var(--night)]/25 to-[var(--night)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_38%,rgba(5,4,35,0.5)_100%)]" />
+        {/* Soft top grade (navbar legibility) — keep the photo otherwise clear */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[var(--night)]/45 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_42%,rgba(5,4,35,0.42)_100%)]" />
+        {/* Long, smooth fade that dissolves the photo into the next (navy) section — no hard bar */}
+        <div className="absolute inset-x-0 bottom-0 h-[58%] bg-gradient-to-b from-transparent via-[var(--night)]/55 to-[var(--night)]" />
       </motion.div>
 
       <motion.div style={{ opacity: fade }} className="relative z-10 mx-auto max-w-4xl px-6 text-center">
@@ -216,7 +218,7 @@ function Hero() {
           className="mt-4"
         >
           {/* Official logo, cut out (transparent) and placed straight on the photo — only a soft glow, no box */}
-          <img src={ASSETS.logoTransparent} alt="Dino's Hausapotheke" width={1078} height={1062} className="mx-auto h-auto w-[clamp(168px,30vw,280px)] [filter:drop-shadow(0_4px_10px_rgba(2,1,34,0.55))_drop-shadow(0_10px_34px_rgba(0,0,0,0.45))]" />
+          <img src={ASSETS.logoTransparent} alt="Dino's Hausapotheke" width={1078} height={1062} className="mx-auto h-auto w-[clamp(168px,30vw,280px)] -translate-x-[2.5%] [filter:drop-shadow(0_4px_10px_rgba(2,1,34,0.55))_drop-shadow(0_10px_34px_rgba(0,0,0,0.45))]" />
         </motion.h1>
         <motion.p
           initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9, ease: EASE, delay: 0.34 }}
