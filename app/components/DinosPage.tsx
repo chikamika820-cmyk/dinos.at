@@ -3,7 +3,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion, useScroll, useTransform, AnimatePresence, useInView, useReducedMotion, MotionConfig, animate } from "framer-motion";
-import type { ReviewsData } from "../lib/reviews";
+import type { ReviewsData, Review } from "../lib/reviews";
 
 /* ============================================================
    BRAND ASSETS — PLACEHOLDERS
@@ -441,24 +441,16 @@ function Field({ label, ...props }: { label: string } & React.InputHTMLAttribute
   );
 }
 
-function StarIcon({ className = "" }: { className?: string }) {
+// Tripadvisor-style rating bubbles (green circles, fractional fill).
+function Bubbles({ value, className = "", size = "h-4 w-4" }: { value: number; className?: string; size?: string }) {
   return (
-    <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden>
-      <path d="M12 2.6l2.9 6.03 6.6.87-4.85 4.5 1.24 6.5L12 17.9l-5.89 3.1 1.24-6.5-4.85-4.5 6.6-.87L12 2.6z" />
-    </svg>
-  );
-}
-
-function Stars({ value, className = "", size = "h-4 w-4" }: { value: number; className?: string; size?: string }) {
-  return (
-    <span className={`inline-flex items-center gap-0.5 ${className}`} role="img" aria-label={`${value.toLocaleString("de-DE")} von 5 Sternen`}>
+    <span className={`inline-flex items-center gap-1 ${className}`} role="img" aria-label={`${value.toLocaleString("de-DE")} von 5`}>
       {[0, 1, 2, 3, 4].map((i) => {
         const fill = Math.max(0, Math.min(1, value - i));
         return (
-          <span key={i} className={`relative inline-block ${size}`}>
-            <StarIcon className={`absolute inset-0 ${size} text-[var(--ink)]/15`} />
-            <span className="absolute inset-0 overflow-hidden" style={{ width: `${fill * 100}%` }}>
-              <StarIcon className={`${size} text-[var(--gold)]`} />
+          <span key={i} className={`relative inline-block ${size} rounded-full ring-1 ring-inset ring-[#00AA6C]/45`}>
+            <span className="absolute inset-0 overflow-hidden rounded-full" style={{ width: `${fill * 100}%` }}>
+              <span className={`block ${size} rounded-full bg-[#00AA6C]`} />
             </span>
           </span>
         );
@@ -467,16 +459,16 @@ function Stars({ value, className = "", size = "h-4 w-4" }: { value: number; cla
   );
 }
 
-function TripadvisorWordmark() {
-  return <span className="font-semibold tracking-tight text-[#00AA6C]">Tripadvisor</span>;
+function TripadvisorWordmark({ className = "" }: { className?: string }) {
+  return <span className={`font-semibold tracking-tight text-[#00AA6C] ${className}`}>Tripadvisor</span>;
 }
 
-/* Premium reviews carousel — real Tripadvisor data (API or curated), custom design */
-function Reviews({ data }: { data: ReviewsData }) {
+/* Individual review carousel — renders ONLY real, owner-provided quotes. */
+function ReviewCarousel({ reviews }: { reviews: Review[] }) {
   const [idx, setIdx] = useState(0);
   const [dir, setDir] = useState(0);
   const reduce = useReducedMotion();
-  const n = data.reviews.length;
+  const n = reviews.length;
   const go = (d: number) => { setDir(d); setIdx((p) => (p + d + n) % n); };
   const jump = (k: number) => { setDir(k > idx ? 1 : -1); setIdx(k); };
   useEffect(() => {
@@ -484,29 +476,15 @@ function Reviews({ data }: { data: ReviewsData }) {
     const id = setInterval(() => { setDir(1); setIdx((p) => (p + 1) % n); }, 6500);
     return () => clearInterval(id);
   }, [reduce, n]);
-  const r = data.reviews[idx];
+  const r = reviews[idx];
   const variants = {
     enter: (d: number) => ({ opacity: 0, x: d > 0 ? 44 : -44 }),
     center: { opacity: 1, x: 0 },
     exit: (d: number) => ({ opacity: 0, x: d > 0 ? -44 : 44 }),
   };
   return (
-    <div className="mt-20 lg:mt-28">
-      <Reveal className="flex flex-col items-center text-center">
-        <Eyebrow>Bewertungen</Eyebrow>
-        <div className="mt-6 flex items-center gap-5">
-          <span className="tnum text-6xl font-semibold leading-none">{data.rating.toLocaleString("de-DE")}</span>
-          <div className="flex flex-col items-start">
-            <Stars value={data.rating} size="h-5 w-5" />
-            <span className="mt-1.5 text-sm text-[var(--ink-2)]">{data.count.toLocaleString("de-DE")} Bewertungen</span>
-          </div>
-        </div>
-        <a href={data.url} target="_blank" rel="noopener noreferrer" className="mt-4 inline-flex items-center gap-1.5 text-sm text-[var(--ink-2)] transition-colors hover:text-[var(--ink)]">
-          Bewertungen auf <TripadvisorWordmark /> ansehen <span aria-hidden>↗</span>
-        </a>
-      </Reveal>
-
-      <div className="relative mx-auto mt-12 max-w-3xl">
+    <div className="mt-12">
+      <div className="relative mx-auto max-w-3xl">
         <AnimatePresence mode="wait" custom={dir}>
           <motion.blockquote
             key={idx}
@@ -521,7 +499,7 @@ function Reviews({ data }: { data: ReviewsData }) {
             onDragEnd={(_e, info) => { if (info.offset.x < -60) go(1); else if (info.offset.x > 60) go(-1); }}
             className="cursor-grab rounded-[2rem] bg-[var(--surface)] p-8 text-center shadow-[0_24px_70px_-34px_rgba(12,14,38,0.30)] ring-1 ring-[var(--line)] active:cursor-grabbing sm:p-12"
           >
-            <Stars value={r.rating} className="justify-center" size="h-5 w-5" />
+            <Bubbles value={r.rating} className="justify-center" size="h-4 w-4" />
             {r.title && <p className="mt-6 text-xl font-semibold tracking-[-0.01em]">{r.title}</p>}
             <p className={`${r.title ? "mt-3" : "mt-6"} text-lg leading-relaxed text-[var(--ink-2)]`}>“{r.text}”</p>
             <footer className="mt-7 text-sm font-medium">
@@ -540,11 +518,37 @@ function Reviews({ data }: { data: ReviewsData }) {
 
       {n > 1 && (
         <div className="mt-7 flex justify-center gap-2">
-          {data.reviews.map((_, k) => (
-            <button key={k} onClick={() => jump(k)} aria-label={`Bewertung ${k + 1}`} className={`h-2 rounded-full transition-all duration-300 ${k === idx ? "w-6 bg-[var(--gold)]" : "w-2 bg-[var(--ink)]/15 hover:bg-[var(--ink)]/30"}`} />
+          {reviews.map((_, k) => (
+            <button key={k} onClick={() => jump(k)} aria-label={`Bewertung ${k + 1}`} className={`h-2 rounded-full transition-all duration-300 ${k === idx ? "w-6 bg-[#00AA6C]" : "w-2 bg-[var(--ink)]/15 hover:bg-[var(--ink)]/30"}`} />
           ))}
         </div>
       )}
+    </div>
+  );
+}
+
+/* Authentic Tripadvisor rating box: real aggregate (rating/count) + logo + link.
+   Individual review cards render only when real owner-provided quotes exist. */
+function Reviews({ data }: { data: ReviewsData }) {
+  return (
+    <div className="mt-20 lg:mt-28">
+      <Reveal className="mx-auto max-w-xl">
+        <div className="flex flex-col items-center gap-6 rounded-[2rem] bg-[var(--surface)] p-8 text-center shadow-[0_24px_70px_-34px_rgba(12,14,38,0.28)] ring-1 ring-[var(--line)] sm:p-9">
+          <TripadvisorWordmark className="text-2xl" />
+          <div className="flex items-center gap-4">
+            <span className="tnum text-5xl font-semibold leading-none">{data.rating.toLocaleString("de-DE")}</span>
+            <div className="flex flex-col items-start">
+              <Bubbles value={data.rating} size="h-5 w-5" />
+              <span className="mt-1.5 text-sm text-[var(--ink-2)]">{data.count.toLocaleString("de-DE")} Bewertungen</span>
+            </div>
+          </div>
+          <a href={data.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-full bg-[#00AA6C] px-6 py-3 text-sm font-medium text-white transition hover:brightness-95 active:scale-[0.98]">
+            Alle Bewertungen auf Tripadvisor lesen <span aria-hidden>↗</span>
+          </a>
+        </div>
+      </Reveal>
+
+      {data.reviews.length > 0 && <ReviewCarousel reviews={data.reviews} />}
     </div>
   );
 }
@@ -589,7 +593,7 @@ function Reservation({ reviews }: { reviews: ReviewsData | null }) {
           </Reveal>
         </div>
 
-        {reviews && reviews.reviews.length > 0 && <Reviews data={reviews} />}
+        {reviews && <Reviews data={reviews} />}
       </div>
     </section>
   );

@@ -23,16 +23,22 @@ export type ReviewsData = {
   reviews: Review[];
 };
 
-// ─────────────────────────────────────────────────────────────
-// Curated REAL reviews (owner-provided). Fill this with the real
-// Tripadvisor reviews. No placeholders, no invented content.
-// ─────────────────────────────────────────────────────────────
-const CURATED: ReviewsData | null = null;
-
 // Dino's Apothecary Bar, Wien — Tripadvisor identifiers (from the public profile URL).
 const TRIPADVISOR_URL =
   "https://www.tripadvisor.de/Restaurant_Review-g190454-d6210796-Reviews-Dino_s_Apothecary_Bar-Vienna.html";
 const LOCATION_ID = "6210796";
+
+// ─────────────────────────────────────────────────────────────
+// Owner-provided aggregate (verifiable via the Tripadvisor link).
+// `reviews` stays empty until the owner supplies the actual quotes,
+// or the official API is enabled — no scraped/invented review text.
+// ─────────────────────────────────────────────────────────────
+const CURATED: ReviewsData | null = {
+  rating: 4.5,
+  count: 61,
+  url: TRIPADVISOR_URL,
+  reviews: [],
+};
 
 export async function getReviews(): Promise<ReviewsData | null> {
   const key = process.env.TRIPADVISOR_API_KEY;
