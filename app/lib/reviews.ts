@@ -58,12 +58,19 @@ export async function getReviews(): Promise<ReviewsData | null> {
 // Requires a free API key + the location id of Dino's Hausapotheke.
 async function fetchFromTripadvisor(key: string, locationId: string): Promise<ReviewsData> {
   const base = "https://api.content.tripadvisor.com/api/v1/location";
-  const cache = { next: { revalidate: 60 * 60 * 24 } } as const; // refresh daily
+  // ISR caching: fetch at most every 12h (fresh + stable, and it survives
+  // short API outages because the cached copy keeps being served).
+  const init = { headers: { accept: "application/json" }, next: { revalidate: 60 * 60 * 12 } } as const;
 
-  const [details, reviewsRes] = await Promise.all([
-    fetch(`${base}/${locationId}/details?language=de&currency=EUR&key=${key}`, cache).then((r) => r.json()),
-    fetch(`${base}/${locationId}/reviews?language=de&key=${key}`, cache).then((r) => r.json()),
+  const [detailsRes, reviewsRes] = await Promise.all([
+    fetch(`${base}/${locationId}/details?language=de&currency=EUR&key=${key}`, init),
+    fetch(`${base}/${locationId}/reviews?language=de&key=${key}`, init),
   ]);
+  if (!detailsRes.ok || !reviewsRes.ok) {
+    throw new Error(`Tripadvisor API responded ${detailsRes.status}/${reviewsRes.status}`);
+  }
+  const details = await detailsRes.json();
+  const reviewsJson = await reviewsRes.json();
 
   type RawReview = {
     user?: { username?: string };
@@ -73,7 +80,7 @@ async function fetchFromTripadvisor(key: string, locationId: string): Promise<Re
     travel_date?: string;
     published_date?: string;
   };
-  const reviews: Review[] = (reviewsRes?.data ?? []).map((r: RawReview) => ({
+  const reviews: Review[] = (reviewsJson?.data ?? []).map((r: RawReview) => ({
     author: r.user?.username ?? "Tripadvisor-Gast",
     rating: Number(r.rating) || 0,
     title: r.title || undefined,
