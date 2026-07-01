@@ -543,7 +543,7 @@ function Reviews({ data }: { data: ReviewsData }) {
             </div>
           </div>
           <a href={data.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-full bg-[#00AA6C] px-6 py-3 text-sm font-medium text-white transition hover:brightness-95 active:scale-[0.98]">
-            Alle Bewertungen auf Tripadvisor lesen <span aria-hidden>↗</span>
+            Auf Tripadvisor ansehen <span aria-hidden>↗</span>
           </a>
         </div>
       </Reveal>

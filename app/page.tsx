@@ -1,7 +1,6 @@
 import DinosPage from "./components/DinosPage";
-import { getReviews } from "./lib/reviews";
+import { TRIPADVISOR } from "./lib/reviews";
 
-export default async function Home() {
-  const reviews = await getReviews();
-  return <DinosPage reviews={reviews} />;
+export default function Home() {
+  return <DinosPage reviews={TRIPADVISOR} />;
 }
